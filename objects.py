@@ -1,5 +1,4 @@
 
-
 class FundamentalDiagram:
    def __init__(self, flow_capacity=2000, jam_density=180, free_flow_speed=100):
 
