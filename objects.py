@@ -66,6 +66,15 @@ class Cell(FundamentalDiagram):
         print("Länge: ", self.length)
         print("Demand Onramp In: ", self.x_in)
         print("Ratio Onramp Out: ", self.b_out)
+        if self.is_first_cell:
+            print("is first cell")
+        if self.is_last_cell:
+            print("is last cell")
+        print("Flow Capacity: ", self.flow_capacity)
+        print("Critical Density: ", self.critical_density)
+        print("Jam Density: ", self.jam_density)
+        print("Free Flow Speed: ", self.free_flow_speed)
+        print("Congestion Wave Speed: ", self.congestion_wave_speed)
 
 
 class Network:
@@ -73,11 +82,10 @@ class Network:
         self.cells = []
         self.method = method
         self.q = []
+        self.d = []
 
     def add_cell(self, cell):
         self.cells.append(cell)
-        self.indexcells()
-        self.setfirstandlastcell()
 
     def indexcells(self):
         index = 0
@@ -87,12 +95,16 @@ class Network:
 
     def setfirstandlastcell(self):
         for cell in self.cells:
+
             if cell.index == 0:
                 cell.is_first_cell = True
+            else:
+                cell.is_first_cell = False
 
-        for cell in self.cells:
             if cell.index == len(self.cells) - 1:
                 cell.is_last_cell = True
+            else:
+                cell.is_last_cell = False
 
     def getpreviouscell(self, cell):
         if cell.index > 0:
@@ -121,14 +133,15 @@ class Network:
         if index == 1:
             # Scenario a)
             self.demand = 4000
-            self.cells[3] = Cell(fd, 3, 0.5, 2000, 0)
+            self.cells[2] = Cell(fd, 3, 0.5, 2000, 0)
         if index == 2:
             # Scenario b)
             self.demand = 4000
-            self.cells[3] = Cell(fd, 3, 0.5, 2500, 0)
+            self.cells[2] = Cell(fd, 3, 0.5, 2500, 0)
         if index == 3:
             # Scenario c)
             self.demand = 1500
-            self.cells[3] = Cell(fd, 3, 0.5, 1500, 0)
+            self.cells[2] = Cell(fd, 3, 0.5, 1500, 0)
 
         self.indexcells()
+        self.setfirstandlastcell()
