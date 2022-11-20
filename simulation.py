@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class Simulation:
     def __init__(self, net, start_time=0, duration=5000 / 3600, step_time=10 / 3600, scenario_file=None):
         """
@@ -16,7 +15,7 @@ class Simulation:
         self.time = start_time
         self.step_time = step_time
         self.all_steps = np.arange(start_time, start_time + duration, step_time)
-        self.stepindex = 0
+        self.step_index = 0
         self.k = 0
         # self.records = []
 
@@ -37,7 +36,6 @@ class Simulation:
             if cell.index == 0:
                 self.calculatestartdemand(t)
             self.calculateonrampdemand(cell, t)
-            # self.calculateonrampflow(cell, t)
 
     def calculatestartdemand(self, t):
         t_s = t * 3600
@@ -80,20 +78,15 @@ class Simulation:
         for cell in self.net.cells:
             t = self.step_time
             q = self.minflow(cell=cell, k=k)
-            r = cell.x[k] + cell.onrampqueue[k] / t
-            if True:  # cell.index == len(self.net.cells) - 1:
+            r = cell.x[k] + cell.on_ramp_queue[k] / t
+            if cell.is_last_cell or True:   #Für letzte zelle True nur für debugg
                 cell.q.append(q)
                 cell.r.append(r)
-                queue = cell.onrampqueue[k] + (cell.x[k] - r) * t
-                cell.onrampqueue.append(queue)
             else:
-                if q + r <= 12.5 * (180 - self.net.getfollowingscell(cell).p[
-                    k]):  # self.net.getfollowingscell(cell).fundamentaldiagram.congestion_wave_speed * (self.net.getfollowingscell(cell).jam_density - self.net.getfollowingscell(cell).p[k]):
+                if q + r <= 12.5 * (180 - self.net.getfollowingscell(cell).p[k]):  # self.net.getfollowingscell(cell).fundamentaldiagram.congestion_wave_speed * (self.net.getfollowingscell(cell).jam_density - self.net.getfollowingscell(cell).p[k]):
                     print("No Queue")
                     cell.q.append(q)
                     cell.r.append(r)
-                    queue = cell.onrampqueue[k] + (cell.x[k] - r) * t
-                    cell.onrampqueue.append(queue)
                 else:
                     print("Queue")
                     flow = q / (q + r) * self.net.getfollowingscell(cell).fundamentaldiagram.congestion_wave_speed * (
@@ -103,8 +96,8 @@ class Simulation:
                         cell).fundamentaldiagram.congestion_wave_speed * (self.net.getfollowingscell(cell).jam_density -
                                                                           self.net.getfollowingscell(cell).p[k])
                     cell.r.append(onrampflow)
-                    queue = cell.onrampqueue[k] + (cell.x[k] - r) * t
-                    cell.onrampqueue.append(queue)
+            queue = cell.on_ramp_queue[k] + (cell.x[k] - r) * t
+            cell.on_ramp_queue.append(queue)
 
     def updatevolume(self, k):
         # n_i(k+1)=n_i(k)+T[q_i-1(k)+r_i(k)-q_i(k)-s_i(k)]
@@ -115,7 +108,7 @@ class Simulation:
       """
         for cell in self.net.cells:
             if len(self.all_steps) > len(cell.n):
-                if cell.index == 0:
+                if cell.is_first_cell:
                     n = cell.n[k] - self.step_time * (cell.q[k] / (1 - cell.b_out) - self.net.q[k])
                 else:
                     previous_cell = self.net.getpreviouscell(cell)
@@ -131,11 +124,11 @@ class Simulation:
             if cell.p[k] > 0:
                 speed = cell.q[k] / cell.p[k]
             else:
-                speed = 0
+                speed = cell.free_flow_speed
             cell.v.append(speed)
 
     def minflow(self, cell, k):
-        if cell.index == len(self.net.cells) - 1:
+        if cell.is_last_cell:
             return min((1 - cell.b_out) * cell.free_flow_speed * cell.p[k], cell.flow_capacity)
         else:
             return min((1 - cell.b_out) * cell.free_flow_speed * cell.p[k],
