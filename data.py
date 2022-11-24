@@ -1,57 +1,60 @@
-def setscenario(index):
-    #cell = Cell(lanes, length, q_in, q_out, d_in, d_out)
-    #Scenario a)
-    cell1 = Cell(3, 500, 4000, 4000, 0, 0)
-    cell2 = Cell(3, 500, 4000, 4000, 0, 0)
-    cell3 = Cell(3, 500, 4000, 6000, 2000, 0)
-    cell4 = Cell(3, 500, 6500, 6000, 0, 0)
-    cell5 = Cell(3, 500, 6500, 6000, 0, 0)
-    cell6 = Cell(3, 500, 6500, 6000, 0, 0)
-
-    # Scenario b)
-    cell1 = Cell(3, 500, 4000, 4000, 0, 0)
-    cell2 = Cell(3, 500, 4000, 4000, 0, 0)
-    cell3 = Cell(3, 500, 4000, 6500, 2500, 0)
-    cell4 = Cell(3, 500, 6500, 6500, 0, 0)
-    cell5 = Cell(3, 500, 6500, 6500, 0, 0)
-    cell6 = Cell(3, 500, 6500, 6500, 0, 0)
-
-    # Scenario c)
-    cell1 = Cell(3, 500, 1500, 1500, 0, 0)
-    cell2 = Cell(3, 500, 1500, 1500, 0, 0)
-    cell3 = Cell(3, 500, 1500, 3000, 1500, 0)
-    cell4 = Cell(3, 500, 3000, 3000, 0, 0)
-    cell5 = Cell(1, 500, 3000, 3000, 0, 0)
-    cell6 = Cell(3, 500, 3000, 3000, 0, 0)
-
-#Assumptions and Precalculations
-t_1 = 10               #ime Intervall in seconds
-t_end1 = 5000          #Duration of Simulation (5000 sec)
-t = t_1/3600           #Time Intervall in hours
-t_end = t_end1/3600    #Duration of Simulation (in hours)
-
-#range(Start, End-1, Intervall)
-
-# cell.q[i] = cell.p[i] * cell.v[i]
-
-def calculatestartdemand(self, t):
-    if t <= 450:
-        self.q.append(self.demand * t / 450)
-    elif 450 < t <= 3150:
-        self.q.append(self.demand)
-    elif 3150 < t < 3600:
-        self.q.append(self.demand - self.demand * (t - 3150) / 450)
-    else:
-        self.q.append(0)
+import numpy as np
+import matplotlib.pyplot as plt
 
 
-def calculateonrampdemand(self, t):
-    for cell in self.cells:
-        if t <= 900:
-            cell.r.append(cell.x_in / 900 * t)
-        elif 900 < t < 2700:
-            cell.r.append(cell.x_in)
-        elif 2700 < t < 3600:
-            cell.r.append(cell.x_in - cell.x_in / 900 * (t - 2700))
-        else:
-            cell.r.append(0)
+class Data:
+    def __init__(self, steps, network):
+        self.dimension = len(network.cells)
+        self.steps = steps
+        self.network = network
+        self.flow = np.zeros([self.dimension, steps])
+        self.density = np.zeros([self.dimension, steps])
+        self.speed = np.zeros([self.dimension, steps])
+        self.vkt = 0
+        self.vht = 0
+
+    # stores date from cell to data Matrix
+    def update(self, net):
+        for cell in net.cells:
+            self.flow[cell.id-1, cell.time_step] = cell.flow
+            self.density[cell.id-1, cell.time_step] = cell.density
+            self.speed[cell.id-1, cell.time_step] = cell.speed
+
+    def update_cell(self, cell):
+        self.flow[cell.id - 1, cell.time_step] = cell.flow
+        self.density[cell.id - 1, cell.time_step] = cell.density
+        self.speed[cell.id - 1, cell.time_step] = cell.speed
+
+
+    def plot(self):
+        # plotting
+        array = []
+        for cell in self.network.cells:
+            array.append(cell.id)
+        xvalues = np.linspace(0, self.steps, self.steps)
+        yvalues = np.array(array)
+        X, Y = np.meshgrid(xvalues, yvalues)
+
+        # flow graph
+        fig1 = plt.figure()
+        fig1.suptitle('flow', fontsize=32)
+        ax1 = fig1.add_subplot(111, projection='3d')
+        ax1.plot_surface(X, Y, self.flow, cmap="plasma")
+        plt.show()
+
+        # density graph
+        fig2 = plt.figure()
+        fig2.suptitle('density', fontsize=32)
+        ax2 = fig2.add_subplot(111, projection='3d')
+        ax2.plot_surface(X, Y, self.density, cmap="plasma")
+        plt.show()
+
+        # speed graph
+        fig3 = plt.figure()
+        fig3.suptitle('speed', fontsize=32)
+        ax3 = fig3.add_subplot(111, projection='3d')
+        ax3.plot_surface(X, Y, self.speed, cmap="plasma")
+        plt.show()
+
+    def print(self):
+        print("VKT: "+str(round(self.vkt, 2))+"   VHT: "+str(round(self.vht, 2)))
