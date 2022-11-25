@@ -11,7 +11,7 @@ delta_time = 10 / 3600  # Delta T of Simulation
 scenario = 3    # Scenario from Exercise (1=1, 2=b, 3=c)
 k = 0.173       # k Value for Metanet if not calculate
 is_applied = True   # alinea is applied
-precision = 0.0000001  # precision of alinea optimizer
+precision = 0.000001  # precision of alinea optimizer and data print()
 
 # -------------------------------------------------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ alinea.optimize(net, precision)
 # set scenario Parameters from exercise
 net.set_scenario(fd, scenario, method, alinea)
 
-data = Data(nr_of_steps, net)
+data = Data(nr_of_steps, net, precision)
 
 # cfl condition check
 #net.check_cfl()
@@ -58,7 +58,7 @@ for sim_step in range(nr_of_steps):
 
 #data.animate()
 data.print()
-#data.plot()
+data.plot()
 
 
 

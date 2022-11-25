@@ -3,10 +3,11 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as Animation
 
 class Data:
-    def __init__(self, steps, network):
+    def __init__(self, steps, network, precision):
         self.dimension = len(network.cells)
         self.steps = steps
         self.network = network
+        self.precision = precision
         self.flow = np.zeros([self.dimension, steps])
         self.density = np.zeros([self.dimension, steps])
         self.speed = np.zeros([self.dimension, steps])
@@ -81,4 +82,4 @@ class Data:
 
 
     def print(self):
-        print("VKT: "+str(round(self.vkt, 2))+"   VHT: "+str(round(self.vht, 2)))
+        print("VKT: "+str(round(self.vkt, len(str(round(1/self.precision)))))+"   VHT: "+str(round(self.vht, len(str(round(1/self.precision))))))
