@@ -56,7 +56,7 @@ class Network:
             ]
             self.demand = 4000
 
-        else:
+        elif scenario == 3:
             # initialize all cells
             cells = [
                 Cell(delta_length, 3, fd, delta_time),
@@ -68,9 +68,21 @@ class Network:
             ]
             self.demand = 1500
 
+        else:
+            # initialize all cells
+            cells = [
+                Cell(delta_length, 3, fd, delta_time),
+                Cell(delta_length, 3, fd, delta_time),
+                Cell(delta_length, 3, fd, delta_time, on_ramp_demand=1500),
+                Cell(delta_length, 3, fd, delta_time, on_ramp_demand=1500),
+                Cell(delta_length, 2, fd, delta_time),
+                Cell(delta_length, 3, fd, delta_time),
+            ]
+            self.demand = 3500
+
         if method == "metanet" and alinea:
             for cell in cells:
-                if cell.on_ramp_demand and alinea.is_applied:
+                if cell.on_ramp_demand:
                     cell.add_on_ramp(alinea)
 
 

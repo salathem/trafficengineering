@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.animation as Animation
+import matplotlib.animation as animation
 
 class Data:
     def __init__(self, steps, network, precision):
@@ -69,17 +69,16 @@ class Data:
         for step in range(self.steps):
             yvalues1 = self.flow[array, step]
             yvalues2 = self.density[array, step]
-            yvalues3 = self.speed[array, step]
-
-            plt.cla()
+            #yvalues3 = self.speed[array, step]
+            plt.ylim(0, 6000)
 
             plt.plot(xvalues, yvalues1, label="flow")
             plt.plot(xvalues, yvalues2, label="density")
-            plt.plot(xvalues, yvalues3, label="speed")
+            #plt.plot(xvalues, yvalues3, label="speed")
 
-            ani = Animation(plt.gcf(), plt, intervall=1000)
-            plt.show()
-
+            plt.pause(0.0001)
+            plt.clf()
+        plt.show()
 
     def print(self):
         print("VKT: "+str(round(self.vkt, len(str(round(1/self.precision)))))+"   VHT: "+str(round(self.vht, len(str(round(1/self.precision))))))

@@ -7,28 +7,45 @@ from alinea import Alinea
 # parameters to change by User
 method = "metanet"  # method (ctm/metanet)
 nr_of_steps = 500   # Nummer of Steps of Simulation
-delta_time = 10 / 3600  # Delta T of Simulation
-scenario = 3    # Scenario from Exercise (1=1, 2=b, 3=c)
-k = 0.173       # k Value for Metanet if not calculate
-is_applied = True   # alinea is applied
-precision = 0.000001  # precision of alinea optimizer and data print()
+delta_time = 10 / 3600  # Delta T of Simulation [h]
+scenario = 4    # Scenario from Exercise (1=1, 2=b, 3=c)
+precision = 0.001  # precision of alinea optimizer and data print() [-]
+# for metanet only
+# set True to apply alinea Ramp metering
+is_applied = True
+# k = 0 : Ramp metering off
+k = 0.5       # k Value for Metanet if not calculate [-]
+optimise_k = False  # set True to calculate optimal K-Value
 
 # -------------------------------------------------------------------------------------------------------------
 
+if not is_applied:
+    k = 1
+    optimise_k = False
+
 # initialize Fundamentaldiagram
 fd = Fundamentaldiagram()
+
 # initialize Network
 net = Network(method)
-# set Simulation Parameters from exercise
 net.set_simulation(nr_of_steps, delta_time)
-net.set_scenario(fd, scenario, method)
 
-# set alinea
-alinea = Alinea(k, is_applied)
-alinea.optimize(net, precision)
+# initialize alinea
+alinea = Alinea(k, is_applied, optimise_k)
 
-# set scenario Parameters from exercise
-net.set_scenario(fd, scenario, method, alinea)
+if method == "metanet":
+    # set Simulation Parameters from exercise
+
+    net.set_scenario(fd, scenario, method)
+
+    if optimise_k:
+        alinea.optimize(net, precision)
+
+    # set scenario Parameters from exercise
+    net.set_scenario(fd, scenario, method, alinea)
+
+else:
+    net.set_scenario(fd, scenario, method)
 
 data = Data(nr_of_steps, net, precision)
 
@@ -56,9 +73,9 @@ for sim_step in range(nr_of_steps):
     data.update(net)
 
 
-#data.animate()
+data.animate()
 data.print()
-data.plot()
+#data.plot()
 
 
 

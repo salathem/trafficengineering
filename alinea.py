@@ -2,9 +2,10 @@ import numpy as np
 
 
 class Alinea:
-    def __init__(self, k=0.5, is_applied=False):
+    def __init__(self, k=0.5, is_applied=False, optimise_k=False):
         self.k = k
         self.is_applied = is_applied
+        self.optimise_k = optimise_k
 
     def optimize(self, net, precision):
         print("K-Value Optimizer is running ...")
