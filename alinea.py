@@ -20,6 +20,8 @@ class Alinea:
         precision /= 10
         optimal_k = self.k
         counter = 1
+
+        # optimisation
         while step != precision:
             for k in np.arange(start, end, step):
                 self.k = k

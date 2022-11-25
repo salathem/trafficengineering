@@ -69,15 +69,15 @@ class Cell:
                 self.outflow = min((1-self.beta) * self.speed * self.density, self.next_cell.congestion_wave_speed * (self.next_cell.jam_density - self.next_cell.density), self.maximum_flow)
             else:
                 temp_outflow_cell = min((1-self.beta) * self.speed * self.density, self.next_cell.congestion_wave_speed * (self.next_cell.jam_density - self.next_cell.density), self.maximum_flow)
-                temp_outflow_on_ramp = self.next_cell.on_ramp.on_ramp_temp_outflow(time_step)
+                temp_outflow_on_ramp = self.next_cell.on_ramp.temp_outflow(time_step)
 
                 downstream_supply = (self.next_cell.congestion_wave_speed * (self.next_cell.jam_density - self.next_cell.density))
                 if (temp_outflow_on_ramp + temp_outflow_cell) <= downstream_supply:
                     self.outflow = temp_outflow_cell
-                    self.next_cell.on_ramp.on_ramp_update(temp_outflow_on_ramp)
+                    self.next_cell.on_ramp.update_outflow_reduced(temp_outflow_on_ramp)
                 else:
                     self.outflow = temp_outflow_cell / (temp_outflow_cell + temp_outflow_on_ramp) * downstream_supply
-                    self.next_cell.on_ramp.on_ramp_update(temp_outflow_on_ramp / (temp_outflow_cell + temp_outflow_on_ramp) * downstream_supply)
+                    self.next_cell.on_ramp.update_outflow_reduced(temp_outflow_on_ramp / (temp_outflow_cell + temp_outflow_on_ramp) * downstream_supply)
 
             if self.outflow < 0:
                 print("Negativ Outflow")
@@ -85,7 +85,7 @@ class Cell:
 
         # last cell
         else:
-            self.outflow = min((1-self.beta)*self.speed*self.density, self.maximum_flow)
+            self.outflow = min((1-self.beta) * self.speed*self.density, self.maximum_flow)
 
         #vehicles
         self.vehicles = self.vehicles + self.delta_time * (self.inflow - self.outflow)
@@ -125,5 +125,5 @@ class Cell:
             print("CFL Condition Not OK for Cell "+str(self.id)+"!!!")
 
 
-        
-        
+
+

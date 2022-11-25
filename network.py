@@ -15,7 +15,7 @@ class Network:
         for cell in self.cells:
             cell.check_cfl()
 
-    def set_scenario(self, fd, scenario, method, alinea=None, delta_time=None):
+    def set_scenario(self, fd, scenario, alinea=None, delta_time=None):
         self.fd = fd
         self.scenario = scenario
 
@@ -24,10 +24,10 @@ class Network:
         else:
             delta_time = self.delta_time
 
-        if method == "ctm":
+        if self.method == "ctm":
             from cell import Cell
 
-        elif method == "metanet":
+        elif self.method == "metanet":
             from cell_metanet import Cell
 
         delta_length = 0.5
@@ -74,17 +74,17 @@ class Network:
                 Cell(delta_length, 3, fd, delta_time),
                 Cell(delta_length, 3, fd, delta_time),
                 Cell(delta_length, 3, fd, delta_time, on_ramp_demand=1500),
+                Cell(delta_length, 3, fd, delta_time),
                 Cell(delta_length, 3, fd, delta_time, on_ramp_demand=1500),
                 Cell(delta_length, 2, fd, delta_time),
                 Cell(delta_length, 3, fd, delta_time),
             ]
             self.demand = 3500
 
-        if method == "metanet" and alinea:
+        if self.method == "metanet" and alinea:
             for cell in cells:
                 if cell.on_ramp_demand:
                     cell.add_on_ramp(alinea)
-
 
         # define upstream demand
         demand_upstream_points = [0, 450 / 3600, 3150 / 3600, 3600 / 3600, 5000 / 3600]
@@ -96,7 +96,6 @@ class Network:
         self.cells = cells
         self.set_id()
         self.set_neighbours()
-
 
     # link neighbours and network demand
     def set_neighbours(self):

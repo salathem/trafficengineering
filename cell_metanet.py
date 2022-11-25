@@ -3,7 +3,6 @@ from source import Source
 
 class Cell:
     def __init__(self, length, lanes, fd, delta_time, beta=0, on_ramp_demand=0, flow=0, vehicles=0, tao=22, ny=15, kappa=10, delta=1.4, alinea=None):
-        self.id = id
         self.vehicles = vehicles
         self.length = length
         self.flow = 0
@@ -34,15 +33,12 @@ class Cell:
         self.previous_cell = None
         self.next_cell = None
 
-
         # calculations
         self.freeflow_speed = fd.freeflow_speed
         self.jam_density = fd.jam_density * lanes
         self.maximum_flow = fd.maximum_flow * lanes
-
         self.critical_density = self.maximum_flow / (self.freeflow_speed * np.exp(-1/2))
         self.congestion_wave_speed = self.maximum_flow / (self.jam_density - self.critical_density)
-
 
         #model parameters
         self.tao = tao / 3600
@@ -84,17 +80,17 @@ class Cell:
             self.outflow = min(self.density * self.speed, self.maximum_flow, self.next_cell.congestion_wave_speed * (self.next_cell.jam_density - self.next_cell.density))
             if self.next_cell.has_on_ramp:
                 if self.next_cell.on_ramp.alinea.is_applied:
-                    self.next_cell.on_ramp.on_ramp_outflow_alinea(self.time_step, self.next_cell.critical_density, self.next_cell.density)
+                    self.next_cell.on_ramp.outflow_alinea(self.time_step, self.next_cell.critical_density, self.next_cell.density)
                 else:
                     temp_outflow_cell = self.outflow
-                    temp_outflow_on_ramp = self.next_cell.on_ramp.on_ramp_temp_outflow(self.time_step)
+                    temp_outflow_on_ramp = self.next_cell.on_ramp.temp_outflow(self.time_step)
                     downstream_supply = self.next_cell.congestion_wave_speed * (self.next_cell.jam_density - self.next_cell.density)
                     if (temp_outflow_on_ramp + temp_outflow_cell) <= downstream_supply:
                         self.outflow = temp_outflow_cell
-                        self.next_cell.on_ramp.on_ramp_update(temp_outflow_on_ramp)
+                        self.next_cell.on_ramp.update_outflow_reduced(temp_outflow_on_ramp)
                     else:
                         self.outflow = temp_outflow_cell / (temp_outflow_cell + temp_outflow_on_ramp) * downstream_supply
-                        self.next_cell.on_ramp.on_ramp_update(temp_outflow_on_ramp / (temp_outflow_cell + temp_outflow_on_ramp) * downstream_supply)
+                        self.next_cell.on_ramp.update_outflow_reduced(temp_outflow_on_ramp / (temp_outflow_cell + temp_outflow_on_ramp) * downstream_supply)
         self.flow = self.outflow
       
     def density_update(self):
@@ -103,7 +99,7 @@ class Cell:
             if self.density > self.jam_density:
                 print(self.time_step, 'alarm', self.id, self.density)
 
-    def dump_data(self, flow=[], density=[], speed=[],):
+    def dump_data(self, flow, density, speed,):
         flow[self.id-1, self.time_step] = self.outflow
         density[self.id-1, self.time_step] = self.density
         speed[self.id-1, self.time_step] = self.speed

@@ -1,23 +1,9 @@
-import matplotlib.pyplot as plt
+#!/usr/bin/python3
 import numpy as np
+import pandas as pd
+from pandas import Series, DataFrame
+import matplotlib.pyplot as plt
 
-# Fixing random state for reproducibility
-np.random.seed(19680801)
-
-
-plt.rcdefaults()
-fig, ax = plt.subplots()
-
-# Example data
-
-y_pos = np.arange(6)
-performance = 3 + 10 * np.random.rand(6)
-error = np.random.rand(6)
-
-ax.barh(y_pos, performance, xerr=error, align='center')
-ax.set_yticks(y_pos, labels="Bar")
-ax.invert_yaxis()  # labels read top-to-bottom
-ax.set_xlabel('Performance')
-ax.set_title('How fast do you want to go today?')
-
+data = [23, 45, 56, 255, 213]
+plt.plot([1,2,3,4,5], data)
 plt.show()

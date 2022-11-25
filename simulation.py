@@ -2,22 +2,23 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-class Data:
-    def __init__(self, steps, delta_time, network, precision):
+class Simulation:
+    def __init__(self, net, nr_of_steps, delta_time, network, precision):
+        self.net = net
         self.dimension = len(network.cells)
-        self.steps = steps
+        self.nr_of_steps = nr_of_steps
         self.delta_time = delta_time
         self.network = network
         self.precision = precision
-        self.flow = np.zeros([self.dimension, steps])
-        self.density = np.zeros([self.dimension, steps])
-        self.speed = np.zeros([self.dimension, steps])
+        self.flow = np.zeros([self.dimension, nr_of_steps])
+        self.density = np.zeros([self.dimension, nr_of_steps])
+        self.speed = np.zeros([self.dimension, nr_of_steps])
         self.vkt = 0
         self.vht = 0
 
     # stores date from cell to data Matrix
-    def update(self, net):
-        for cell in net.cells:
+    def update(self):
+        for cell in self.net.cells:
             self.flow[cell.id-1, cell.time_step] = cell.flow
             self.density[cell.id-1, cell.time_step] = cell.density
             self.speed[cell.id-1, cell.time_step] = cell.speed
@@ -27,13 +28,32 @@ class Data:
         self.density[cell.id - 1, cell.time_step] = cell.density
         self.speed[cell.id - 1, cell.time_step] = cell.speed
 
+    def run(self):
+        for sim_step in range(self.nr_of_steps):
+
+            # update network demand
+            self.net.demand.update(sim_step)
+            for cell in self.net.cells:
+                # calculate cell
+                cell.update(sim_step)
+
+                # update performance parameters
+                temp_vkt, temp_vht = cell.performance_calculation()
+                self.vkt += temp_vkt
+                self.vht += temp_vht
+
+            # advance simulation
+            sim_step += 1
+            # get data for plots
+            self.update()
+
 
     def plot(self):
         # plotting
         array = []
         for cell in self.network.cells:
             array.append(cell.id)
-        xvalues = np.linspace(0, self.steps, self.steps)
+        xvalues = np.linspace(0, self.nr_of_steps, self.nr_of_steps)
         yvalues = np.array(array)
         X, Y = np.meshgrid(xvalues, yvalues)
 
@@ -63,7 +83,7 @@ class Data:
         max_flow = self.flow.max()
         max_density = self.density.max()
         max_speed = self.speed.max()
-        max_time = self.delta_time * self.steps * 3600
+        max_time = self.delta_time * self.nr_of_steps * 3600
 
         array = []
         for index in range(len(self.network.cells)):
@@ -72,7 +92,7 @@ class Data:
         for cell in self.network.cells:
             xvalues.append(cell.id)
 
-        for step in range(self.steps):
+        for step in range(self.nr_of_steps):
 
             time = self.delta_time * step * 3600
 

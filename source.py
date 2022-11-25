@@ -2,8 +2,7 @@ import numpy as np
 
 
 class Source:
-    def __init__(self, timestep, demand_points, demand_values, alinea=None, id=0):
-        self.id = id
+    def __init__(self, timestep, demand_points, demand_values, alinea=None):
         self.demand_points = demand_points
         self.demand_values = demand_values
         self.current_demand = 0
@@ -30,16 +29,16 @@ class Source:
         current_timestep = timestep * self.timestep_hour
         return np.interp(current_timestep, self.demand_points, self.demand_values)
 
-    def on_ramp_temp_outflow(self, timestep):
+    def temp_outflow(self, timestep):
         self.current_demand = self.demand_function(timestep)
         self.time_step = timestep
         return min(self.current_demand + self.queue / self.timestep_hour, self.next_cell.maximum_flow, self.next_cell.congestion_wave_speed * (self.next_cell.jam_density - self.next_cell.density))
 
-    def on_ramp_update(self, outflow_reduced):
+    def update_outflow_reduced(self, outflow_reduced):
         self.outflow = outflow_reduced
         self.queue = self.queue + (self.current_demand - outflow_reduced) * self.timestep_hour
 
-    def on_ramp_outflow_alinea(self, timestep, downstream_crit_density, downstream_density):
+    def outflow_alinea(self, timestep, downstream_crit_density, downstream_density):
         self.current_demand = self.demand_function(timestep)
         self.time_step = timestep
         self.outflow = min(self.outflow + self.alinea.k * (downstream_crit_density - downstream_density), self.current_demand + self.queue / self.timestep_hour)
