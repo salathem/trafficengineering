@@ -40,8 +40,8 @@ net.set_simulation(nr_of_steps, delta_time)
 alinea = Alinea(k, is_applied, optimise_k)
 
 if method == "metanet":
-    # set Simulation Parameters from exercise
 
+    # set Simulation Parameters from exercise
     net.set_scenario(fd, scenario, method)
 
     if optimise_k:
@@ -56,7 +56,7 @@ else:
 data = Data(nr_of_steps, delta_time, net, precision)
 
 # cfl condition check
-#net.check_cfl()
+net.check_cfl()
 
 # simulation
 for sim_step in range(nr_of_steps):
