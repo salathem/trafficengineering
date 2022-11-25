@@ -10,6 +10,12 @@ nr_of_steps = 500   # Nummer of Steps of Simulation
 delta_time = 10 / 3600  # Delta T of Simulation [h]
 scenario = 4    # Scenario from Exercise (1=1, 2=b, 3=c)
 precision = 0.001  # precision of alinea optimizer and data print() [-]
+
+# visualisation
+show_plots = True
+show_animation = False
+show_values = True
+
 # for metanet only
 # set True to apply alinea Ramp metering
 is_applied = True
@@ -72,10 +78,13 @@ for sim_step in range(nr_of_steps):
     # get data for plots
     data.update(net)
 
-
-data.animate()
-data.print()
-#data.plot()
+# show data
+if show_plots:
+    data.plot()
+if show_animation:
+    data.animate()
+if show_values:
+    data.print()
 
 
 
