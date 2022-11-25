@@ -1,21 +1,18 @@
-# libraries
-# files
+# parameters to change by User
+method = "metanet"  # method (ctm/metanet)
+nr_of_steps = 500   # Nummer of Steps of Simulation
+delta_time = 10 / 3600  # Delta T of Simulation
+scenario = 2    # Scenario from Exercise (1=1, 2=b, 3=c)
+k = 0.173       # k Value for Metanet if not calculate
+is_applied = True   # alinea is applied
+precision = 0.0001  # precision of alinea optimizer
+
+#-------------------------------------------------------------------------------------------------------------
+# import files
 from fd import Fundamentaldiagram
 from data import *
 from network import Network
 from alinea import Alinea
-import numpy as np
-from source import Source
-
-# parameters to change by User
-method = "metanet"
-nr_of_steps = 500
-delta_time = 10 / 3600
-scenario = 2
-k = 0.173
-is_applied = True   # alinea is applied
-precision = 0.0001 # precision of alinea optimizer
-
 
 # initialize Fundamentaldiagram
 fd = Fundamentaldiagram()
