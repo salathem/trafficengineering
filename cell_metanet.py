@@ -65,14 +65,12 @@ class Cell:
 
     def speed_update(self):
         if self.previous_cell and self.next_cell:
-#            self.speed = self.speed + self.delta_time / self.tao * (self.fd.get_speed(self.density) - self.speed) \
             self.speed = self.speed + self.delta_time / self.tao * (self.get_speed(self.density) - self.speed) \
                          + (self.delta_time / self.length) * self.speed * (self.previous_cell.speed - self.speed) \
                          - (self.ny * self.delta_time) / (self.tao * self.length) * (self.next_cell.density - self.density) / (self.density + self.kappa) \
                          - (self.delta * self.delta_time) / (self.length * self.lambdai) * (self.r * self.speed) / (self.density + self.kappa)
                  
         if not self.next_cell:
-#            self.speed = self.speed + self.delta_time / self.tao * (self.fd.get_speed(self.density) - self.speed) \
             self.speed = self.speed + self.delta_time / self.tao * (self.get_speed(self.density) - self.speed) \
                          + self.delta_time / self.length * self.speed * (self.previous_cell.speed - self.speed) \
                          - (self.delta * self.delta_time) / (self.length * self.lambdai) * (self.r * self.speed) / (self.density + self.kappa)

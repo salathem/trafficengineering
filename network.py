@@ -7,7 +7,23 @@ class Network:
         self.cells = []
         self.demand = None
 
-    def set_scenario(self, fd, delta_time, index, method, alinea=None, alinea_k=None):
+    def set_simulation(self, nr_of_steps, delta_time):
+        self.nr_of_steps = nr_of_steps
+        self.delta_time = delta_time
+
+    def check_cfl(self):
+        for cell in self.cells:
+            cell.check_cfl()
+
+    def set_scenario(self, fd, scenario, method, alinea=None, alinea_k=None, delta_time=None):
+        self.fd = fd
+        self.scenario = scenario
+
+        if delta_time:
+            self.delta_time = delta_time
+        else:
+            delta_time = self.delta_time
+
         if method == "ctm":
             from cell import Cell
 
@@ -16,7 +32,7 @@ class Network:
 
         delta_length = 0.5
 
-        if index == 1:
+        if scenario == 1:
             # initialize all cells
             cells = [
                 Cell(delta_length, 3, fd, delta_time),
@@ -28,7 +44,7 @@ class Network:
             ]
             self.demand = 4000
 
-        elif index == 2:
+        elif scenario == 2:
             # initialize all cells
             cells = [
                 Cell(delta_length, 3, fd, delta_time),
