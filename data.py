@@ -3,9 +3,10 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 class Data:
-    def __init__(self, steps, network, precision):
+    def __init__(self, steps, delta_time, network, precision):
         self.dimension = len(network.cells)
         self.steps = steps
+        self.delta_time = delta_time
         self.network = network
         self.precision = precision
         self.flow = np.zeros([self.dimension, steps])
@@ -59,6 +60,11 @@ class Data:
 
 
     def animate(self):
+        max_flow = self.flow.max()
+        max_density = self.density.max()
+        max_speed = self.speed.max()
+        max_time = self.delta_time * self.steps * 3600
+
         array = []
         for index in range(len(self.network.cells)):
             array.append(index)
@@ -67,17 +73,46 @@ class Data:
             xvalues.append(cell.id)
 
         for step in range(self.steps):
+
+            time = self.delta_time * step * 3600
+
             yvalues1 = self.flow[array, step]
             yvalues2 = self.density[array, step]
-            #yvalues3 = self.speed[array, step]
-            plt.ylim(0, 6000)
+            yvalues3 = self.speed[array, step]
 
-            plt.plot(xvalues, yvalues1, label="flow")
-            plt.plot(xvalues, yvalues2, label="density")
-            #plt.plot(xvalues, yvalues3, label="speed")
+            # Plot the subplots
+            # Plot 1
+            plt.subplot(4, 1, 1)
+            plt.plot(xvalues, yvalues1, 'g')
+            plt.title('Animation')
+            plt.ylim(0, max_flow)
+            plt.xlabel('Cells')
+            plt.ylabel('Flow [veh/h]')
 
-            plt.pause(0.0001)
+            # Plot 2
+            plt.subplot(4, 1, 2)
+            plt.plot(xvalues, yvalues2, '-.r')
+            plt.ylim(0, max_density)
+            plt.xlabel('Cells')
+            plt.ylabel('Density [veh/km]')
+
+            # Plot 3
+            plt.subplot(4, 1, 3)
+            plt.plot(xvalues, yvalues3, '-.y')
+            plt.ylim(0, max_speed)
+            plt.xlabel('Cells')
+            plt.ylabel('Speed [km/h]')
+
+            # Plot 4
+            plt.subplot(4, 1, 4)
+            plt.barh("0", time)
+            plt.xlim(0, max_time)
+            #plt.xlabel('Time')
+            plt.ylabel('Time [s]')
+
+            plt.pause(0.01)
             plt.clf()
+
         plt.show()
 
     def print(self):

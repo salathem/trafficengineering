@@ -47,7 +47,7 @@ if method == "metanet":
 else:
     net.set_scenario(fd, scenario, method)
 
-data = Data(nr_of_steps, net, precision)
+data = Data(nr_of_steps, delta_time, net, precision)
 
 # cfl condition check
 #net.check_cfl()

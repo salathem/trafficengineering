@@ -1,21 +1,23 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib.mlab as mlab
 
 # Fixing random state for reproducibility
 np.random.seed(19680801)
 
-dt = 0.01
-t = np.arange(0, 10, dt)
-nse = np.random.randn(len(t))
-r = np.exp(-t / 0.05)
 
-cnse = np.convolve(nse, r) * dt
-cnse = cnse[:len(t)]
-s = 0.1 * np.sin(2 * np.pi * t) + cnse
+plt.rcdefaults()
+fig, ax = plt.subplots()
 
-fig, (ax0, ax1) = plt.subplots(2, 1)
-ax0.plot(t, s)
-ax1.psd(s, 512, 1 / dt)
+# Example data
+
+y_pos = np.arange(6)
+performance = 3 + 10 * np.random.rand(6)
+error = np.random.rand(6)
+
+ax.barh(y_pos, performance, xerr=error, align='center')
+ax.set_yticks(y_pos, labels="Bar")
+ax.invert_yaxis()  # labels read top-to-bottom
+ax.set_xlabel('Performance')
+ax.set_title('How fast do you want to go today?')
 
 plt.show()
