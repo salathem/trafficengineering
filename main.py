@@ -8,10 +8,10 @@ from alinea import Alinea
 method = "metanet"  # method (ctm/metanet)
 nr_of_steps = 500   # Nummer of Steps of Simulation
 delta_time = 10 / 3600  # Delta T of Simulation
-scenario = 1    # Scenario from Exercise (1=1, 2=b, 3=c)
+scenario = 3    # Scenario from Exercise (1=1, 2=b, 3=c)
 k = 0.173       # k Value for Metanet if not calculate
 is_applied = True   # alinea is applied
-precision = 0.01  # precision of alinea optimizer
+precision = 0.0000001  # precision of alinea optimizer
 
 # -------------------------------------------------------------------------------------------------------------
 
