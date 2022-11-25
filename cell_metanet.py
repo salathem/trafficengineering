@@ -2,7 +2,7 @@ import numpy as np
 from source import Source
 
 class Cell:
-    def __init__(self, length, lanes, fd, delta_time, id=0, beta=0, on_ramp_demand=0, flow=0, vehicles=0, tao=22, ny=15, kappa=10, delta=1.4, alinea=False, alinea_k=0.5):
+    def __init__(self, length, lanes, fd, delta_time, beta=0, on_ramp_demand=0, flow=0, vehicles=0, tao=22, ny=15, kappa=10, delta=1.4, alinea=None):
         self.id = id
         self.vehicles = vehicles
         self.length = length
@@ -28,7 +28,7 @@ class Cell:
         #objects
         self.fd = fd
         if self.has_on_ramp:
-            self.add_on_ramp(alinea, alinea_k)
+            self.add_on_ramp(alinea)
         else:
             self.on_ramp = None
         self.previous_cell = None
@@ -83,7 +83,7 @@ class Cell:
         if self.next_cell:
             self.outflow = min(self.density * self.speed, self.maximum_flow, self.next_cell.congestion_wave_speed * (self.next_cell.jam_density - self.next_cell.density))
             if self.next_cell.has_on_ramp:
-                if self.next_cell.on_ramp.alinea:
+                if self.next_cell.on_ramp.alinea.is_applied:
                     self.next_cell.on_ramp.on_ramp_outflow_alinea(self.time_step, self.next_cell.critical_density, self.next_cell.density)
                 else:
                     temp_outflow_cell = self.outflow
@@ -122,11 +122,11 @@ class Cell:
             return 0
         return self.freeflow_speed * np.exp(-1/2 * (density / self.critical_density)**2)
 
-    def add_on_ramp(self, alinea, alinea_k):
+    def add_on_ramp(self, alinea):
         demand_onramp_points = [0, 900 / 3600, 2700 / 3600, 3600 / 3600, 5000 / 3600]
         demand_onramp_values = [0, self.on_ramp_demand, self.on_ramp_demand, 0, 0]
         # initialize on-ramp cell
-        on_ramp = Source(self.delta_time, demand_onramp_points, demand_onramp_values, alinea, alinea_k)
+        on_ramp = Source(self.delta_time, demand_onramp_points, demand_onramp_values, alinea)
         on_ramp.next_cell = self
         self.on_ramp = on_ramp
 

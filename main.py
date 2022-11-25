@@ -1,29 +1,26 @@
-# parameters to change by User
-method = "metanet"  # method (ctm/metanet)
-nr_of_steps = 500   # Nummer of Steps of Simulation
-delta_time = 10 / 3600  # Delta T of Simulation
-scenario = 2    # Scenario from Exercise (1=1, 2=b, 3=c)
-k = 0.173       # k Value for Metanet if not calculate
-is_applied = True   # alinea is applied
-precision = 0.0001  # precision of alinea optimizer
-
-#-------------------------------------------------------------------------------------------------------------
 # import files
 from fd import Fundamentaldiagram
 from data import *
 from network import Network
 from alinea import Alinea
 
+# parameters to change by User
+method = "metanet"  # method (ctm/metanet)
+nr_of_steps = 500   # Nummer of Steps of Simulation
+delta_time = 10 / 3600  # Delta T of Simulation
+scenario = 1    # Scenario from Exercise (1=1, 2=b, 3=c)
+k = 0.173       # k Value for Metanet if not calculate
+is_applied = True   # alinea is applied
+precision = 0.01  # precision of alinea optimizer
+
+# -------------------------------------------------------------------------------------------------------------
+
 # initialize Fundamentaldiagram
 fd = Fundamentaldiagram()
-
 # initialize Network
 net = Network(method)
-
 # set Simulation Parameters from exercise
 net.set_simulation(nr_of_steps, delta_time)
-
-# set scenario Parameters from exercise
 net.set_scenario(fd, scenario, method)
 
 # set alinea
@@ -31,12 +28,12 @@ alinea = Alinea(k, is_applied)
 alinea.optimize(net, precision)
 
 # set scenario Parameters from exercise
-net.set_scenario(fd, scenario, method, alinea, alinea.k, delta_time)
+net.set_scenario(fd, scenario, method, alinea)
 
 data = Data(nr_of_steps, net)
 
 # cfl condition check
-net.check_cfl()
+#net.check_cfl()
 
 # simulation
 for sim_step in range(nr_of_steps):
@@ -58,8 +55,10 @@ for sim_step in range(nr_of_steps):
     # get data for plots
     data.update(net)
 
+
+#data.animate()
 data.print()
-data.plot()
+#data.plot()
 
 
 

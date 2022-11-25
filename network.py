@@ -15,7 +15,7 @@ class Network:
         for cell in self.cells:
             cell.check_cfl()
 
-    def set_scenario(self, fd, scenario, method, alinea=None, alinea_k=None, delta_time=None):
+    def set_scenario(self, fd, scenario, method, alinea=None, delta_time=None):
         self.fd = fd
         self.scenario = scenario
 
@@ -68,10 +68,10 @@ class Network:
             ]
             self.demand = 1500
 
-        if method == "metanet":
+        if method == "metanet" and alinea:
             for cell in cells:
-                if cell.on_ramp_demand and alinea and alinea_k:
-                    cell.add_on_ramp(alinea, alinea_k)
+                if cell.on_ramp_demand and alinea.is_applied:
+                    cell.add_on_ramp(alinea)
 
 
         # define upstream demand

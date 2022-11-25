@@ -7,7 +7,7 @@ class Alinea:
         self.is_applied = is_applied
 
     def optimize(self, net, precision):
-
+        print("K-Value Optimizer is running...")
         vht_min = None
         self.fd = net.fd
         self.scenario = net.scenario
@@ -47,12 +47,6 @@ class Alinea:
                     vht_min = vht
                     self.k = k
 
-
-            print("Zyklus")
-            print(start)
-            print(end)
-            print(step)
-            print(self.k)
             start = max(precision, self.k-step)
             end = min(1-precision, self.k+step)
             step = max(precision, step/10)

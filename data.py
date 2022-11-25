@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import matplotlib.animation as Animation
 
 class Data:
     def __init__(self, steps, network):
@@ -55,6 +55,30 @@ class Data:
         ax3 = fig3.add_subplot(111, projection='3d')
         ax3.plot_surface(X, Y, self.speed, cmap="plasma")
         plt.show()
+
+
+    def animate(self):
+        array = []
+        for index in range(len(self.network.cells)):
+            array.append(index)
+        xvalues = []
+        for cell in self.network.cells:
+            xvalues.append(cell.id)
+
+        for step in range(self.steps):
+            yvalues1 = self.flow[array, step]
+            yvalues2 = self.density[array, step]
+            yvalues3 = self.speed[array, step]
+
+            plt.cla()
+
+            plt.plot(xvalues, yvalues1, label="flow")
+            plt.plot(xvalues, yvalues2, label="density")
+            plt.plot(xvalues, yvalues3, label="speed")
+
+            ani = Animation(plt.gcf(), plt, intervall=1000)
+            plt.show()
+
 
     def print(self):
         print("VKT: "+str(round(self.vkt, 2))+"   VHT: "+str(round(self.vht, 2)))

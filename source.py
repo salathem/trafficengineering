@@ -2,7 +2,7 @@ import numpy as np
 
 
 class Source:
-    def __init__(self, timestep, demand_points, demand_values, alinea=False, alinea_k=0.5, id=0):
+    def __init__(self, timestep, demand_points, demand_values, alinea=None, id=0):
         self.id = id
         self.demand_points = demand_points
         self.demand_values = demand_values
@@ -15,7 +15,6 @@ class Source:
         self.time_step = 0
         self.timestep_hour = timestep
         self.alinea = alinea
-        self.alinea_k = alinea_k
 
         # objects
         self.next_cell = None
@@ -43,7 +42,7 @@ class Source:
     def on_ramp_outflow_alinea(self, timestep, downstream_crit_density, downstream_density):
         self.current_demand = self.demand_function(timestep)
         self.time_step = timestep
-        self.outflow = min(self.outflow + self.alinea_k * (downstream_crit_density - downstream_density), self.current_demand + self.queue / self.timestep_hour)
+        self.outflow = min(self.outflow + self.alinea.k * (downstream_crit_density - downstream_density), self.current_demand + self.queue / self.timestep_hour)
         self.queue += (self.current_demand - self.outflow) * self.timestep_hour
         return self.outflow
     
