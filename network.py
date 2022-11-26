@@ -1,4 +1,6 @@
 from source import Source
+from fd import Fundamentaldiagram
+import openpyxl as pyxl
 
 
 class Network:
@@ -25,7 +27,7 @@ class Network:
             delta_time = self.delta_time
 
         if self.method == "ctm":
-            from cell import Cell
+            from cell_ctm import Cell
 
         elif self.method == "metanet":
             from cell_metanet import Cell
@@ -73,10 +75,14 @@ class Network:
             cells = [
                 Cell(delta_length, 3, fd, delta_time),
                 Cell(delta_length, 3, fd, delta_time),
-                Cell(delta_length, 3, fd, delta_time, on_ramp_demand=1500),
                 Cell(delta_length, 3, fd, delta_time),
                 Cell(delta_length, 3, fd, delta_time, on_ramp_demand=1500),
+                Cell(delta_length, 3, fd, delta_time),
+                Cell(delta_length, 3, fd, delta_time),
                 Cell(delta_length, 2, fd, delta_time),
+                Cell(delta_length, 3, fd, delta_time, on_ramp_demand=4000),
+                Cell(delta_length, 2, fd, delta_time),
+                Cell(delta_length, 3, fd, delta_time),
                 Cell(delta_length, 3, fd, delta_time),
             ]
             self.demand = 3500
@@ -92,6 +98,45 @@ class Network:
 
         # initialize Network Demand
         self.demand = Source(delta_time, demand_upstream_points, demand_upstream_values)
+
+        self.cells = cells
+        self.set_id()
+        self.set_neighbours()
+
+    def import_scenario(self, alinea=None):
+
+        wb = pyxl.load_workbook("scenario.xlsx")
+        sheet = wb["cells"]
+
+        self.demand = sheet.cell(row=2, column=10).value
+        self.delta_time = sheet.cell(row=2, column=11).value
+
+        if self.method == "ctm":
+            from cell_ctm import CellCTM
+
+        elif self.method == "metanet":
+            from cell_metanet import CellMetanet
+
+        row = 2
+        cells = []
+        cell_id = sheet.cell(row=row, column=1).value
+        while cell_id:
+            cells.append(Cell(sheet.cell(row=row, column=2).value, sheet.cell(row=row, column=3).value, Fundamentaldiagram(sheet.cell(row=row, column=4).value, sheet.cell(row=row, column=5).value, sheet.cell(row=row, column=6).value), self.delta_time, on_ramp_demand=sheet.cell(row=row, column=7).value, beta=sheet.cell(row=row, column=8).value))
+            row += 1
+            cell_id = sheet.cell(row=row, column=1).value
+
+        if self.method == "metanet" and alinea:
+
+            for cell in cells:
+                if cell.on_ramp_demand:
+                    cell.add_on_ramp(alinea)
+
+        # define upstream demand
+        demand_upstream_points = [0, 450 / 3600, 3150 / 3600, 3600 / 3600, 5000 / 3600]
+        demand_upstream_values = [0, self.demand, self.demand, 0, 0]
+
+        # initialize Network Demand
+        self.demand = Source(self.delta_time, demand_upstream_points, demand_upstream_values)
 
         self.cells = cells
         self.set_id()

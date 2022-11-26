@@ -6,8 +6,8 @@ from alinea import Alinea
 
 # parameters to change by User
 method = "metanet"  # method (ctm/metanet)
-nr_of_steps = 500   # Nummer of Steps of Simulation
-delta_time = 10 / 3600  # Delta T of Simulation [h]
+nr_of_steps = 5500   # Nummer of Steps of Simulation
+delta_time = 1 / 3600  # Delta T of Simulation [h]
 scenario = 3    # Scenario from Exercise (1=1, 2=b, 3=c)
 precision = 0.0001  # precision of alinea optimizer and data print() [-]
 
@@ -36,6 +36,7 @@ fd = Fundamentaldiagram()
 net = Network(method)
 net.set_simulation(nr_of_steps, delta_time)
 # set Simulation Parameters from exercise
+#net.set_scenario(fd, scenario)
 net.set_scenario(fd, scenario)
 
 # initialize alinea
