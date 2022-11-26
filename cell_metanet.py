@@ -4,24 +4,20 @@ from cell import Cell as Mastercell
 
 
 class Cell(Mastercell):
-    def __init__(self, length, lanes, fd, delta_time, beta=0, on_ramp_demand=0, flow=0, vehicles=0, tao=22, ny=15, kappa=10, delta=1.4, alinea=None):
-        super(Cell, self).__init__(length, lanes, fd, delta_time, flow, vehicles, beta, on_ramp_demand)
+    def __init__(self, length, lanes, delta_time, fd, beta=0, on_ramp_demand=0, flow=0, vehicles=0, tao=22, ny=15, kappa=10, delta=1.4, alinea=None):
+        super(Cell, self).__init__(length, lanes, delta_time, fd, flow, vehicles, beta, on_ramp_demand)
 
-        self.outflow = flow
         self.time_step = 0
         self.r = 0
 
-        #objects
-        self.fd = fd
+        # add on_ramp
         self.add_on_ramp(alinea)
-        self.previous_cell = None
-        self.next_cell = None
 
         # calculations
         self.critical_density = self.maximum_flow / (self.freeflow_speed * np.exp(-1/2))
         self.congestion_wave_speed = self.maximum_flow / (self.jam_density - self.critical_density)
 
-        #model parameters
+        # model parameters metanet
         self.tao = tao / 3600
         self.ny = ny
         self.kappa = kappa
@@ -39,21 +35,6 @@ class Cell(Mastercell):
         self.density_update()
         self.speed_update()
 
-    def speed_update(self):
-        if self.previous_cell and self.next_cell:
-            self.speed = self.speed + self.delta_time / self.tao * (self.get_speed(self.density) - self.speed) \
-                         + (self.delta_time / self.length) * self.speed * (self.previous_cell.speed - self.speed) \
-                         - (self.ny * self.delta_time) / (self.tao * self.length) * (self.next_cell.density - self.density) / (self.density + self.kappa) \
-                         - (self.delta * self.delta_time) / (self.length * self.lambdai) * (self.r * self.speed) / (self.density + self.kappa)
-                 
-        if not self.next_cell:
-            self.speed = self.speed + self.delta_time / self.tao * (self.get_speed(self.density) - self.speed) \
-                         + self.delta_time / self.length * self.speed * (self.previous_cell.speed - self.speed) \
-                         - (self.delta * self.delta_time) / (self.length * self.lambdai) * (self.r * self.speed) / (self.density + self.kappa)
-                
-        if self.speed < 0:
-            self.speed = 0
-            
     def flow_update(self):
         self.outflow = min(self.density * self.speed, self.maximum_flow)
         if self.next_cell:
@@ -77,7 +58,26 @@ class Cell(Mastercell):
         if self.previous_cell:
             self.density = self.density + self.delta_time / (self.length * self.lambdai) * (self.previous_cell.outflow - self.outflow + self.r)
             if self.density > self.jam_density:
-                print(self.time_step, 'alarm', self.id, self.density)
+                print("Error Overflow")
+
+    def speed_update(self):
+        if self.previous_cell and self.next_cell:
+            self.speed = self.speed + self.delta_time / self.tao * (self.get_speed(self.density) - self.speed) \
+                         + (self.delta_time / self.length) * self.speed * (self.previous_cell.speed - self.speed) \
+                         - (self.ny * self.delta_time) / (self.tao * self.length) * (
+                                     self.next_cell.density - self.density) / (self.density + self.kappa) \
+                         - (self.delta * self.delta_time) / (self.length * self.lambdai) * (self.r * self.speed) / (
+                                     self.density + self.kappa)
+
+        if not self.next_cell:
+            self.speed = self.speed + self.delta_time / self.tao * (self.get_speed(self.density) - self.speed) \
+                         + self.delta_time / self.length * self.speed * (self.previous_cell.speed - self.speed) \
+                         - (self.delta * self.delta_time) / (self.length * self.lambdai) * (self.r * self.speed) / (
+                                     self.density + self.kappa)
+
+        if self.speed < 0:
+            print("Error negativ Speed")
+            self.speed = 0
 
     def get_speed(self, density):
         alpha = 2

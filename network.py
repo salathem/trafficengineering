@@ -37,36 +37,36 @@ class Network:
         if scenario == 1:
             # initialize all cells
             cells = [
-                Cell(delta_length, 3, fd, delta_time),
-                Cell(delta_length, 3, fd, delta_time),
-                Cell(delta_length, 3, fd, delta_time, on_ramp_demand=2000),
-                Cell(delta_length, 3, fd, delta_time),
-                Cell(delta_length, 3, fd, delta_time),
-                Cell(delta_length, 3, fd, delta_time),
+                Cell(delta_length, 3, delta_time, fd),
+                Cell(delta_length, 3, delta_time, fd),
+                Cell(delta_length, 3, delta_time, fd, on_ramp_demand=2000),
+                Cell(delta_length, 3, delta_time, fd),
+                Cell(delta_length, 3, delta_time, fd),
+                Cell(delta_length, 3, delta_time, fd),
             ]
             self.demand = 4000
 
         elif scenario == 2:
             # initialize all cells
             cells = [
-                Cell(delta_length, 3, fd, delta_time),
-                Cell(delta_length, 3, fd, delta_time),
-                Cell(delta_length, 3, fd, delta_time, on_ramp_demand=2500),
-                Cell(delta_length, 3, fd, delta_time),
-                Cell(delta_length, 3, fd, delta_time),
-                Cell(delta_length, 3, fd, delta_time),
+                Cell(delta_length, 3, delta_time, fd),
+                Cell(delta_length, 3, delta_time, fd),
+                Cell(delta_length, 3, delta_time, fd, on_ramp_demand=2500),
+                Cell(delta_length, 3, delta_time, fd),
+                Cell(delta_length, 3, delta_time, fd),
+                Cell(delta_length, 3, delta_time, fd),
             ]
             self.demand = 4000
 
         elif scenario == 3:
             # initialize all cells
             cells = [
-                Cell(delta_length, 3, fd, delta_time),
-                Cell(delta_length, 3, fd, delta_time),
-                Cell(delta_length, 3, fd, delta_time, on_ramp_demand=1500),
-                Cell(delta_length, 3, fd, delta_time),
-                Cell(delta_length, 1, fd, delta_time),
-                Cell(delta_length, 3, fd, delta_time),
+                Cell(delta_length, 3, delta_time, fd),
+                Cell(delta_length, 3, delta_time, fd),
+                Cell(delta_length, 3, delta_time, fd, on_ramp_demand=1500),
+                Cell(delta_length, 3, delta_time, fd),
+                Cell(delta_length, 1, delta_time, fd),
+                Cell(delta_length, 3, delta_time, fd),
             ]
             self.demand = 1500
 

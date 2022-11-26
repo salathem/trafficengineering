@@ -3,8 +3,8 @@ from cell import Cell as Mastercell
 
 
 class Cell(Mastercell):
-    def __init__(self, length, lanes, fd, delta_time, flow=0, vehicles=0, beta=0, on_ramp_demand=0):
-        super(Cell, self).__init__(length, lanes, fd, delta_time, flow, vehicles, beta, on_ramp_demand)
+    def __init__(self, length, lanes, delta_time, fd, flow=0, vehicles=0, beta=0, on_ramp_demand=0):
+        super(Cell, self).__init__(length, lanes, delta_time, fd, flow, vehicles, beta, on_ramp_demand)
 
         # calculations
         self.critical_density = self.maximum_flow / self.freeflow_speed
@@ -41,7 +41,7 @@ class Cell(Mastercell):
                     self.next_cell.on_ramp.update_outflow_reduced(temp_outflow_on_ramp / (temp_outflow_cell + temp_outflow_on_ramp) * downstream_supply)
 
             if self.outflow < 0:
-                print("Negativ Outflow")
+                print("Error Negativ Outflow")
                 self.outflow = 0
 
         # last cell
