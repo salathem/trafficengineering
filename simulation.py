@@ -1,14 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
+
 
 class Simulation:
-    def __init__(self, net, nr_of_steps, delta_time, network, precision):
+    def __init__(self, net, nr_of_steps, delta_time, precision):
         self.net = net
-        self.dimension = len(network.cells)
+        self.dimension = len(net.cells)
         self.nr_of_steps = nr_of_steps
         self.delta_time = delta_time
-        self.network = network
+        self.scenario = net.scenario
+        self.method = net.method
         self.precision = precision
         self.flow = np.zeros([self.dimension, nr_of_steps])
         self.density = np.zeros([self.dimension, nr_of_steps])
@@ -48,10 +49,10 @@ class Simulation:
             self.update()
 
 
-    def plot(self):
+    def plot(self, save_plots):
         # plotting
         array = []
-        for cell in self.network.cells:
+        for cell in self.net.cells:
             array.append(cell.id)
         xvalues = np.linspace(0, self.nr_of_steps * self.delta_time * 3600, self.nr_of_steps)
         yvalues = np.array(array)
@@ -65,6 +66,9 @@ class Simulation:
         ax1.set_ylabel('Cell #')
         ax1.set_xlabel('Time [s]')
         ax1.set_zlabel('Flow [veh / h]')
+        if save_plots:
+            plt.savefig("flow.jpg)")
+            # plt.savefig('plot/flow ' + self.method + ' ' + str(self.scenario) + '.png)')
         plt.show()
 
         # density graph
@@ -75,6 +79,9 @@ class Simulation:
         ax2.set_ylabel('Cell #')
         ax2.set_xlabel('Time [s]')
         ax2.set_zlabel('Density [veh / km]')
+        if save_plots:
+            plt.savefig('plot/density.jpg)')
+            # plt.savefig('density ' + self.method + ' ' + str(self.scenario) + '.png)')
         plt.show()
 
         # speed graph
@@ -85,6 +92,9 @@ class Simulation:
         ax3.set_ylabel('Cell #')
         ax3.set_xlabel('Time [s]')
         ax3.set_zlabel('Velocity [km / h]')
+        if save_plots:
+            plt.savefig('plot/speed.jpg)')
+            #plt.savefig('speed ' + self.method + ' ' + str(self.scenario) + '.png)')
         plt.show()
 
 
@@ -95,10 +105,10 @@ class Simulation:
         max_time = self.delta_time * self.nr_of_steps * 3600
 
         array = []
-        for index in range(len(self.network.cells)):
+        for index in range(len(self.net.cells)):
             array.append(index)
         xvalues = []
-        for cell in self.network.cells:
+        for cell in self.net.cells:
             xvalues.append(cell.id)
 
         for step in range(self.nr_of_steps):

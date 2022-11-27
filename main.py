@@ -8,13 +8,14 @@ from alinea import Alinea
 method = "metanet"  # method (ctm/metanet)
 nr_of_steps = 500   # Nummer of Steps of Simulation
 delta_time = 10 / 3600  # Delta T of Simulation [h]
-scenario = 3    # Scenario from Exercise (1=1, 2=b, 3=c)
+scenario = 2    # Scenario from Exercise (1=1, 2=b, 3=c)
 precision = 0.0001  # precision of alinea optimizer and data print() [-]
 
 # visualisation
 show_plots = True
 show_animation = False
 show_values = True
+save_plots = False
 
 # for metanet only
 # set True to apply alinea Ramp metering
@@ -49,7 +50,7 @@ if method == "metanet":
     # set scenario Parameters from exercise
     net.set_scenario(fd, scenario, alinea)
 
-simulation = Simulation(net, nr_of_steps, delta_time, net, precision)
+simulation = Simulation(net, nr_of_steps, delta_time, precision)
 
 # cfl condition check
 net.check_cfl()
@@ -59,7 +60,7 @@ simulation.run()
 
 # show data
 if show_plots:
-    simulation.plot()
+    simulation.plot(save_plots)
 if show_animation:
     simulation.animate()
 if show_values:
