@@ -76,7 +76,7 @@ class Cell(Mastercell):
                                      self.density + self.kappa)
 
         if self.speed < 0:
-            print("Error negativ Speed")
+            # print("Error negativ Speed")
             self.speed = 0
 
     def get_speed(self, density):

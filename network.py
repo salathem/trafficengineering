@@ -34,7 +34,7 @@ class Network:
 
         delta_length = 0.5
 
-        if scenario == 1:
+        if scenario == "a":
             # initialize all cells
             cells = [
                 Cell(delta_length, 3, delta_time, fd),
@@ -46,7 +46,7 @@ class Network:
             ]
             self.demand = 4000
 
-        elif scenario == 2:
+        elif scenario == "b":
             # initialize all cells
             cells = [
                 Cell(delta_length, 3, delta_time, fd),
@@ -58,7 +58,7 @@ class Network:
             ]
             self.demand = 4000
 
-        elif scenario == 3:
+        elif scenario == "c":
             # initialize all cells
             cells = [
                 Cell(delta_length, 3, delta_time, fd),

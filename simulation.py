@@ -16,7 +16,6 @@ class Simulation:
         self.speed = np.zeros([self.dimension, nr_of_steps])
         self.vkt = 0
         self.vht = 0
-
     # stores date from cell to data Matrix
     def update(self):
         for cell in self.net.cells:
@@ -48,8 +47,7 @@ class Simulation:
             # get data for plots
             self.update()
 
-
-    def plot(self, save_plots):
+    def plot(self,show_plots, save_plots, dpi):
         # plotting
         array = []
         for cell in self.net.cells:
@@ -67,9 +65,9 @@ class Simulation:
         ax1.set_xlabel('Time [s]')
         ax1.set_zlabel('Flow [veh / h]')
         if save_plots:
-            plt.savefig("flow.jpg)")
-            # plt.savefig('plot/flow ' + self.method + ' ' + str(self.scenario) + '.png)')
-        plt.show()
+            plt.savefig('plots/flow ' + self.method + ' scenario ' + self.scenario + '.png', dpi=dpi)
+        if show_plots:
+            plt.show()
 
         # density graph
         fig2 = plt.figure()
@@ -80,9 +78,9 @@ class Simulation:
         ax2.set_xlabel('Time [s]')
         ax2.set_zlabel('Density [veh / km]')
         if save_plots:
-            plt.savefig('plot/density.jpg)')
-            # plt.savefig('density ' + self.method + ' ' + str(self.scenario) + '.png)')
-        plt.show()
+            plt.savefig('plots/density ' + self.method + ' scenario ' + self.scenario + '.png', dpi=dpi)
+        if show_plots:
+            plt.show()
 
         # speed graph
         fig3 = plt.figure()
@@ -93,9 +91,9 @@ class Simulation:
         ax3.set_xlabel('Time [s]')
         ax3.set_zlabel('Velocity [km / h]')
         if save_plots:
-            plt.savefig('plot/speed.jpg)')
-            #plt.savefig('speed ' + self.method + ' ' + str(self.scenario) + '.png)')
-        plt.show()
+            plt.savefig('plots/speed ' + self.method + ' scenario ' + self.scenario + '.png', dpi=dpi)
+        if show_plots:
+            plt.show()
 
 
     def animate(self):
