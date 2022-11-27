@@ -9,20 +9,21 @@ method = "all"  # method (ctm/metanet/all)
 nr_of_steps = 500   # Nummer of Steps of Simulation
 delta_time = 10 / 3600  # Delta T of Simulation [h]
 scenario = "all"    # Scenario from Exercise (a/b/c/all)
-precision = 0.001  # precision of alinea optimizer and data print() [-]
+precision = 0.01  # precision of alinea optimizer and data print() [-]
 
 # visualisation
-show_plots = False
-show_animation = False
-show_values = True
-save_plots = True
+show_plots = False      # (True/False)
+show_animation = False  # (True/False)
+show_values = True      # (True/False)
+save_plots = True       # (True/False)
+diagram_type = "2D"     # (2D/3D)
 dpi = 300
 
 # for metanet only
 # set True to apply alinea Ramp metering
 is_applied = True
 # k = 0 : Ramp metering off
-k = 0      # k Value for Metanet if not calculate [-]
+k = 0.173      # k Value for Metanet if not calculate [-]
 optimise_k = True  # set True to calculate optimal K-Value
 
 # -------------------------------------------------------------------------------------------------------------
@@ -79,7 +80,10 @@ for method in methods:
         simulation.run()
 
         # show data
-        simulation.plot(show_plots, save_plots, dpi)
+        if diagram_type == "2D":
+            simulation.plot_2d(show_plots, save_plots, dpi)
+        if diagram_type == "3D":
+            simulation.plot_3d(show_plots, save_plots, dpi)
         if show_animation:
             simulation.animate()
         if show_values:

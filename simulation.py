@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -16,6 +17,7 @@ class Simulation:
         self.speed = np.zeros([self.dimension, nr_of_steps])
         self.vkt = 0
         self.vht = 0
+        self.diagram_types = [["flow", "[veh/h]"], ["density", "[veh/km]"], ["speed", "[km/h]"]]
     # stores date from cell to data Matrix
     def update(self):
         for cell in self.net.cells:
@@ -47,7 +49,28 @@ class Simulation:
             # get data for plots
             self.update()
 
-    def plot(self,show_plots, save_plots, dpi):
+    def plot_2d(self, show_plots, save_plots, dpi):
+
+        xvalues = np.linspace(0, self.nr_of_steps * self.delta_time * 3600, self.nr_of_steps)
+
+        # make folders
+        for diagram_type in self.diagram_types:
+            path = 'plots/' + diagram_type[0] + ' ' + self.method + ' scenario ' + self.scenario
+            if not os.path.exists(path):
+                os.mkdir(path)
+
+            for cell in self.net.cells:
+                plt.plot(xvalues, self.flow[cell.id-1])
+                plt.xlabel('Time [s]')
+                plt.ylabel(diagram_type[0] + ' ' + diagram_type[1])
+                plt.title('cell ' + str(cell.id) + ' ' + diagram_type[0] + ' ' + self.method + ' scenario ' + self.scenario)
+                if save_plots:
+                    plt.savefig(path + '/cell ' + str(cell.id) + ' ' + diagram_type[0] + ' ' + self.method + ' scenario ' + self.scenario + '.png', dpi=dpi)
+                if show_plots:
+                    plt.show()
+                plt.clf()
+
+    def plot_3d(self, show_plots, save_plots, dpi):
         # plotting
         array = []
         for cell in self.net.cells:
@@ -56,45 +79,18 @@ class Simulation:
         yvalues = np.array(array)
         X, Y = np.meshgrid(xvalues, yvalues)
 
-        # flow graph
-        fig1 = plt.figure()
-        fig1.suptitle('flow', fontsize=32)
-        ax1 = fig1.add_subplot(111, projection='3d')
-        ax1.plot_surface(X, Y, self.flow, cmap="plasma")
-        ax1.set_ylabel('Cell #')
-        ax1.set_xlabel('Time [s]')
-        ax1.set_zlabel('Flow [veh / h]')
-        if save_plots:
-            plt.savefig('plots/flow ' + self.method + ' scenario ' + self.scenario + '.png', dpi=dpi)
-        if show_plots:
-            plt.show()
-
-        # density graph
-        fig2 = plt.figure()
-        fig2.suptitle('density', fontsize=32)
-        ax2 = fig2.add_subplot(111, projection='3d')
-        ax2.plot_surface(X, Y, self.density, cmap="plasma")
-        ax2.set_ylabel('Cell #')
-        ax2.set_xlabel('Time [s]')
-        ax2.set_zlabel('Density [veh / km]')
-        if save_plots:
-            plt.savefig('plots/density ' + self.method + ' scenario ' + self.scenario + '.png', dpi=dpi)
-        if show_plots:
-            plt.show()
-
-        # speed graph
-        fig3 = plt.figure()
-        fig3.suptitle('speed', fontsize=32)
-        ax3 = fig3.add_subplot(111, projection='3d')
-        ax3.plot_surface(X, Y, self.speed, cmap="plasma")
-        ax3.set_ylabel('Cell #')
-        ax3.set_xlabel('Time [s]')
-        ax3.set_zlabel('Velocity [km / h]')
-        if save_plots:
-            plt.savefig('plots/speed ' + self.method + ' scenario ' + self.scenario + '.png', dpi=dpi)
-        if show_plots:
-            plt.show()
-
+        for diagram_type in self.diagram_types:
+            fig1 = plt.figure()
+            fig1.suptitle(diagram_type[0] + ' ' + self.method + ' scenario ' + self.scenario)
+            ax1 = fig1.add_subplot(111, projection='3d')
+            ax1.plot_surface(X, Y, self.flow, cmap="plasma")
+            ax1.set_ylabel('Cell #')
+            ax1.set_xlabel('Time [s]')
+            ax1.set_zlabel(diagram_type[0] + ' ' + diagram_type[1])
+            if save_plots:
+                plt.savefig('plots/' + diagram_type[0] + ' ' + self.method + ' scenario ' + self.scenario + '.png', dpi=dpi)
+            if show_plots:
+                plt.show()
 
     def animate(self):
         max_flow = self.flow.max()
