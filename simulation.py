@@ -83,7 +83,7 @@ class Simulation:
             fig1 = plt.figure()
             fig1.suptitle(diagram_type[0] + ' ' + self.method + ' scenario ' + self.scenario)
             ax1 = fig1.add_subplot(111, projection='3d')
-            ax1.plot_surface(X, Y, self.flow, cmap="plasma")
+            ax1.plot_surface(X, Y, getattr(self, diagram_type[0]), cmap="plasma")
             ax1.set_ylabel('Cell #')
             ax1.set_xlabel('Time [s]')
             ax1.set_zlabel(diagram_type[0] + ' ' + diagram_type[1])
