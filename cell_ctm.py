@@ -8,7 +8,7 @@ class Cell(Mastercell):
 
         # calculations
         self.critical_density = self.maximum_flow / self.freeflow_speed
-        self.congestion_wave_speed = fd.congestion_wave_speed
+        self.congestion_wave_speed = abs(self.maximum_flow / (self.critical_density - self.jam_density))
 
         # main parameters
         self.flow = self.get_flow()

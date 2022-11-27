@@ -25,7 +25,7 @@ class Alinea:
         while step != precision:
             for k in np.arange(start, end, step):
                 self.k = k
-                net.set_scenario(self.fd, self.scenario, self.method, self)
+                net.set_scenario(self.fd, self.scenario, alinea=self)
                 vkt = 0
                 vht = 0
                 for sim_step in range(net.nr_of_steps):

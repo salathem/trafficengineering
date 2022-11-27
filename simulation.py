@@ -53,7 +53,7 @@ class Simulation:
         array = []
         for cell in self.network.cells:
             array.append(cell.id)
-        xvalues = np.linspace(0, self.nr_of_steps, self.nr_of_steps)
+        xvalues = np.linspace(0, self.nr_of_steps * self.delta_time * 3600, self.nr_of_steps)
         yvalues = np.array(array)
         X, Y = np.meshgrid(xvalues, yvalues)
 
@@ -62,6 +62,9 @@ class Simulation:
         fig1.suptitle('flow', fontsize=32)
         ax1 = fig1.add_subplot(111, projection='3d')
         ax1.plot_surface(X, Y, self.flow, cmap="plasma")
+        ax1.set_ylabel('Cell #')
+        ax1.set_xlabel('Time [s]')
+        ax1.set_zlabel('Flow [veh / h]')
         plt.show()
 
         # density graph
@@ -69,6 +72,9 @@ class Simulation:
         fig2.suptitle('density', fontsize=32)
         ax2 = fig2.add_subplot(111, projection='3d')
         ax2.plot_surface(X, Y, self.density, cmap="plasma")
+        ax2.set_ylabel('Cell #')
+        ax2.set_xlabel('Time [s]')
+        ax2.set_zlabel('Density [veh / km]')
         plt.show()
 
         # speed graph
@@ -76,6 +82,9 @@ class Simulation:
         fig3.suptitle('speed', fontsize=32)
         ax3 = fig3.add_subplot(111, projection='3d')
         ax3.plot_surface(X, Y, self.speed, cmap="plasma")
+        ax3.set_ylabel('Cell #')
+        ax3.set_xlabel('Time [s]')
+        ax3.set_zlabel('Velocity [km / h]')
         plt.show()
 
 

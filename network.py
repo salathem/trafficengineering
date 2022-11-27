@@ -1,5 +1,5 @@
 from source import Source
-from fd import Fundamentaldiagram
+from cell import Fundamentaldiagram
 import openpyxl as pyxl
 
 
@@ -112,10 +112,10 @@ class Network:
         self.delta_time = sheet.cell(row=2, column=11).value
 
         if self.method == "ctm":
-            from cell_ctm import CellCTM
+            from cell_ctm import Cell
 
         elif self.method == "metanet":
-            from cell_metanet import CellMetanet
+            from cell_metanet import Cell
 
         row = 2
         cells = []

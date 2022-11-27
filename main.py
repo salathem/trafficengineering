@@ -1,13 +1,13 @@
 # import files
-from fd import Fundamentaldiagram
+from cell import Fundamentaldiagram
 from simulation import *
 from network import Network
 from alinea import Alinea
 
 # parameters to change by User
 method = "metanet"  # method (ctm/metanet)
-nr_of_steps = 5500   # Nummer of Steps of Simulation
-delta_time = 1 / 3600  # Delta T of Simulation [h]
+nr_of_steps = 500   # Nummer of Steps of Simulation
+delta_time = 10 / 3600  # Delta T of Simulation [h]
 scenario = 3    # Scenario from Exercise (1=1, 2=b, 3=c)
 precision = 0.0001  # precision of alinea optimizer and data print() [-]
 
@@ -18,7 +18,7 @@ show_values = True
 
 # for metanet only
 # set True to apply alinea Ramp metering
-is_applied = False
+is_applied = True
 # k = 0 : Ramp metering off
 k = 0      # k Value for Metanet if not calculate [-]
 optimise_k = True  # set True to calculate optimal K-Value
