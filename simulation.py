@@ -18,8 +18,9 @@ class Simulation:
         self.vkt = 0
         self.vht = 0
         self.diagram_types = [["flow", "[veh/h]"], ["density", "[veh/km]"], ["speed", "[km/h]"]]
-    # stores date from cell to data Matrix
+
     def update(self):
+        # stores date from cell to data Matrix
         for cell in self.net.cells:
             self.flow[cell.id-1, cell.time_step] = cell.flow
             self.density[cell.id-1, cell.time_step] = cell.density
@@ -51,7 +52,7 @@ class Simulation:
 
     def plot_2d(self, show_plots, save_plots, dpi):
 
-        xvalues = np.linspace(0, self.nr_of_steps * self.delta_time * 3600, self.nr_of_steps)
+        x_values = np.linspace(0, self.nr_of_steps * self.delta_time * 3600, self.nr_of_steps)
 
         # make folders
         for diagram_type in self.diagram_types:
@@ -60,7 +61,7 @@ class Simulation:
                 os.mkdir(path)
 
             for cell in self.net.cells:
-                plt.plot(xvalues, self.flow[cell.id-1])
+                plt.plot(x_values, self.flow[cell.id-1])
                 plt.xlabel('Time [s]')
                 plt.ylabel(diagram_type[0] + ' ' + diagram_type[1])
                 plt.title('cell ' + str(cell.id) + ' ' + diagram_type[0] + ' ' + self.method + ' scenario ' + self.scenario)
@@ -75,9 +76,9 @@ class Simulation:
         array = []
         for cell in self.net.cells:
             array.append(cell.id)
-        xvalues = np.linspace(0, self.nr_of_steps * self.delta_time * 3600, self.nr_of_steps)
-        yvalues = np.array(array)
-        X, Y = np.meshgrid(xvalues, yvalues)
+        x_values = np.linspace(0, self.nr_of_steps * self.delta_time * 3600, self.nr_of_steps)
+        y_values = np.array(array)
+        X, Y = np.meshgrid(x_values, y_values)
 
         for diagram_type in self.diagram_types:
             fig1 = plt.figure()
@@ -102,22 +103,22 @@ class Simulation:
         array = []
         for index in range(len(self.net.cells)):
             array.append(index)
-        xvalues = []
+        x_values = []
         for cell in self.net.cells:
-            xvalues.append(cell.id)
+            x_values.append(cell.id)
 
         for step in range(self.nr_of_steps):
 
             time = self.delta_time * step * 3600
 
-            yvalues1 = self.flow[array, step]
-            yvalues2 = self.density[array, step]
-            yvalues3 = self.speed[array, step]
+            y_values1 = self.flow[array, step]
+            y_values2 = self.density[array, step]
+            y_values3 = self.speed[array, step]
 
             # Plot the subplots
             # Plot 1
             plt.subplot(4, 1, 1)
-            plt.plot(xvalues, yvalues1, 'g')
+            plt.plot(x_values, y_values1, 'g')
             plt.title('Animation')
             plt.ylim(0, max_flow)
             plt.xlabel('Cells')
@@ -125,23 +126,22 @@ class Simulation:
 
             # Plot 2
             plt.subplot(4, 1, 2)
-            plt.plot(xvalues, yvalues2, '-.r')
+            plt.plot(x_values, y_values2, '-.r')
             plt.ylim(0, max_density)
             plt.xlabel('Cells')
             plt.ylabel('Density [veh/km]')
 
             # Plot 3
             plt.subplot(4, 1, 3)
-            plt.plot(xvalues, yvalues3, '-.y')
+            plt.plot(x_values, y_values3, '-.y')
             plt.ylim(0, max_speed)
             plt.xlabel('Cells')
             plt.ylabel('Speed [km/h]')
 
-            # Plot 4
+            # Time Counter Slider
             plt.subplot(4, 1, 4)
             plt.barh("0", time)
             plt.xlim(0, max_time)
-            #plt.xlabel('Time')
             plt.ylabel('Time [s]')
 
             plt.pause(0.01)

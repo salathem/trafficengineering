@@ -18,13 +18,14 @@ class Cell(Mastercell):
 
         self.time_step = time_step
 
-        #inflow
+        # inflow
         if self.has_on_ramp:
             self.inflow = self.previous_cell.outflow + self.on_ramp.outflow
         else:
             self.inflow = self.previous_cell.outflow
 
-        #outflow
+        # outflow
+        # for cell 1 to (n-1)
         if self.next_cell:
             if not self.next_cell.has_on_ramp:
                 self.outflow = min((1-self.beta) * self.speed * self.density, self.next_cell.congestion_wave_speed * (self.next_cell.jam_density - self.next_cell.density), self.maximum_flow)
@@ -32,26 +33,25 @@ class Cell(Mastercell):
                 temp_outflow_cell = min((1-self.beta) * self.speed * self.density, self.next_cell.congestion_wave_speed * (self.next_cell.jam_density - self.next_cell.density), self.maximum_flow)
                 temp_outflow_on_ramp = self.next_cell.on_ramp.temp_outflow(time_step)
 
-                downstream_supply = (self.next_cell.congestion_wave_speed * (self.next_cell.jam_density - self.next_cell.density))
-                if (temp_outflow_on_ramp + temp_outflow_cell) <= downstream_supply:
+                if (temp_outflow_on_ramp + temp_outflow_cell) <= self.downstream_supply():
                     self.outflow = temp_outflow_cell
                     self.next_cell.on_ramp.update_outflow_reduced(temp_outflow_on_ramp)
                 else:
-                    self.outflow = temp_outflow_cell / (temp_outflow_cell + temp_outflow_on_ramp) * downstream_supply
-                    self.next_cell.on_ramp.update_outflow_reduced(temp_outflow_on_ramp / (temp_outflow_cell + temp_outflow_on_ramp) * downstream_supply)
+                    self.outflow = temp_outflow_cell / (temp_outflow_cell + temp_outflow_on_ramp) * self.downstream_supply()
+                    self.next_cell.on_ramp.update_outflow_reduced(temp_outflow_on_ramp / (temp_outflow_cell + temp_outflow_on_ramp) * self.downstream_supply())
 
             if self.outflow < 0:
                 print("Error Negativ Outflow")
                 self.outflow = 0
 
-        # last cell
+        # for cell n (last cell)
         else:
             self.outflow = min((1-self.beta) * self.speed*self.density, self.maximum_flow)
 
-        #vehicles
+        # vehicles
         self.vehicles = self.vehicles + self.delta_time * (self.inflow - self.outflow)
 
-        #parameters
+        # parameters
         if self.vehicles:
             self.density = self.vehicles / self.length
             self.flow = self.get_flow()

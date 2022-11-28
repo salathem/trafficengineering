@@ -12,6 +12,7 @@ class Fundamentaldiagram:
 class Cell(Fundamentaldiagram):
     def __init__(self, length, lanes, delta_time, fd, flow=0, vehicles=0, beta=0, on_ramp_demand=0, freeflow_speed=100, jam_density=180, maximum_flow=2000):
         super(Cell, self).__init__(freeflow_speed, jam_density, maximum_flow, lanes)
+        self.id = None
         self.vehicles = vehicles
         self.length = length
         self.flow = flow
@@ -71,6 +72,5 @@ class Cell(Fundamentaldiagram):
         else:
             print("CFL Condition Not OK for Cell "+str(self.id)+"!!!")
 
-
-
-
+    def downstream_supply(self):
+        return self.next_cell.congestion_wave_speed * (self.next_cell.jam_density - self.next_cell.density)     # 𝑤i+1 (𝜌i+1_jam− 𝜌i+1(𝑘))

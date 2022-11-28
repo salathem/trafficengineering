@@ -41,10 +41,9 @@ class Source:
     def outflow_alinea(self, timestep, downstream_crit_density, downstream_density):
         self.current_demand = self.demand_function(timestep)
         self.time_step = timestep
-        self.outflow = min(self.outflow + self.alinea.k * (downstream_crit_density - downstream_density), self.current_demand + self.queue / self.timestep_hour)
+        self.outflow = min(self.outflow + self.alinea.k * (downstream_crit_density - downstream_density), self.current_demand + self.queue / self.timestep_hour)    # 𝒓𝒊(𝒌) = 𝒓𝒊(𝒌−𝟏)+𝑲*(𝝆𝒄𝒓 −𝝆𝒎(𝒌−𝟏))
         self.queue += (self.current_demand - self.outflow) * self.timestep_hour
         return self.outflow
     
     def performance_calculation(self):
         return 0, (self.queue * self.timestep_hour)
-

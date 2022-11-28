@@ -3,6 +3,9 @@ import numpy as np
 
 class Alinea:
     def __init__(self, k=0.5, is_applied=False, optimise_k=False):
+        self.method = None
+        self.scenario = None
+        self.fd = None
         self.k = k
         self.is_applied = is_applied
         self.optimise_k = optimise_k
