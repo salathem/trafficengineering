@@ -26,8 +26,8 @@ def user_input_check(method, nr_of_steps, delta_time, scenario, precision, show_
         print("not 0.1 > precision > 0 or is not float")
         user_input_is_valid = False
 
-    if not (1 > k > 0) or not (type(k) is float):
-        print("not 1 > k > 0 or is not float")
+    if not (1000 > k > 0) or not (type(k) is float):
+        print("not 1000 > k > 0 or is not float")
         user_input_is_valid = False
 
     if not (1000 > dpi > 100) or not (type(dpi) is int):

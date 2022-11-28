@@ -4,13 +4,10 @@ from cell import Cell as Mastercell
 
 class Cell(Mastercell):
     def __init__(self, length, lanes, delta_time, fd, beta=0, on_ramp_demand=0, flow=0, vehicles=0, tao=22, ny=15, kappa=10, delta=1.4, alinea=None):
-        super(Cell, self).__init__(length, lanes, delta_time, fd, flow, vehicles, beta, on_ramp_demand)
+        super(Cell, self).__init__(length, lanes, delta_time, fd, alinea, flow, vehicles, beta, on_ramp_demand)
 
         self.time_step = 0
         self.r = 0
-
-        # add on_ramp
-        self.add_on_ramp(alinea)
 
         # calculations
         self.critical_density = self.maximum_flow / (self.freeflow_speed * np.exp(-1/2))
@@ -38,10 +35,10 @@ class Cell(Mastercell):
         # for cell 1 to (n-1)
         if self.next_cell:
             self.outflow = min(self.density * self.speed, self.maximum_flow, self.next_cell.congestion_wave_speed * (self.next_cell.jam_density - self.next_cell.density))  # 𝑤𝑖+1(𝜌̅𝑖+1 − 𝜌𝑖+1(𝑘))
-            if self.next_cell.has_on_ramp:
+            if self.next_cell.has_on_ramp:  # with alinea
                 if self.next_cell.on_ramp.alinea.is_applied:
                     self.next_cell.on_ramp.outflow_alinea(self.time_step, self.next_cell.critical_density, self.next_cell.density)
-                else:
+                else:   # without alinea
                     temp_outflow_cell = self.outflow
                     temp_outflow_on_ramp = self.next_cell.on_ramp.temp_outflow(self.time_step)
                     if (temp_outflow_on_ramp + temp_outflow_cell) <= self.downstream_supply():

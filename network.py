@@ -37,36 +37,36 @@ class Network:
         if scenario == "a":
             # initialize all cells
             cells = [
-                Cell(delta_length, 3, delta_time, fd),
-                Cell(delta_length, 3, delta_time, fd),
-                Cell(delta_length, 3, delta_time, fd, on_ramp_demand=2000),
-                Cell(delta_length, 3, delta_time, fd),
-                Cell(delta_length, 3, delta_time, fd),
-                Cell(delta_length, 3, delta_time, fd),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea, on_ramp_demand=2000),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea),
             ]
             self.demand = 4000
 
         elif scenario == "b":
             # initialize all cells
             cells = [
-                Cell(delta_length, 3, delta_time, fd),
-                Cell(delta_length, 3, delta_time, fd),
-                Cell(delta_length, 3, delta_time, fd, on_ramp_demand=2500),
-                Cell(delta_length, 3, delta_time, fd),
-                Cell(delta_length, 3, delta_time, fd),
-                Cell(delta_length, 3, delta_time, fd),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea, on_ramp_demand=2500),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea),
             ]
             self.demand = 4000
 
         elif scenario == "c":
             # initialize all cells
             cells = [
-                Cell(delta_length, 3, delta_time, fd),
-                Cell(delta_length, 3, delta_time, fd),
-                Cell(delta_length, 3, delta_time, fd, on_ramp_demand=1500),
-                Cell(delta_length, 3, delta_time, fd),
-                Cell(delta_length, 1, delta_time, fd),
-                Cell(delta_length, 3, delta_time, fd),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea, on_ramp_demand=1500),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea),
+                Cell(delta_length, 1, delta_time, fd, alinea=alinea),
+                Cell(delta_length, 3, delta_time, fd, alinea=alinea),
             ]
             self.demand = 1500
 
@@ -86,11 +86,6 @@ class Network:
                 Cell(delta_length, 3, fd, delta_time),
             ]
             self.demand = 3500
-
-        if self.method == "metanet" and alinea:
-            for cell in cells:
-                if cell.on_ramp_demand:
-                    cell.add_on_ramp(alinea)
 
         # define upstream demand
         demand_upstream_points = [0, 450 / 3600, 3150 / 3600, 3600 / 3600, 5000 / 3600]

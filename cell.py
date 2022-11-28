@@ -10,9 +10,10 @@ class Fundamentaldiagram:
 
 
 class Cell(Fundamentaldiagram):
-    def __init__(self, length, lanes, delta_time, fd, flow=0, vehicles=0, beta=0, on_ramp_demand=0, freeflow_speed=100, jam_density=180, maximum_flow=2000):
+    def __init__(self, length, lanes, delta_time, fd, alinea, flow=0, vehicles=0, beta=0, on_ramp_demand=0, freeflow_speed=100, jam_density=180, maximum_flow=2000):
         super(Cell, self).__init__(freeflow_speed, jam_density, maximum_flow, lanes)
         self.id = None
+        self.aline = alinea
         self.vehicles = vehicles
         self.length = length
         self.flow = flow
@@ -49,11 +50,11 @@ class Cell(Fundamentaldiagram):
             self.has_off_ramp = False
             self.off_ramp = None
 
-    def add_on_ramp(self, alinea=None):
+    def add_on_ramp(self):
         demand_onramp_points = [0, 900 / 3600, 2700 / 3600, 3600 / 3600, 5000 / 3600]
         demand_onramp_values = [0, self.on_ramp_demand, self.on_ramp_demand, 0, 0]
         # initialize on-ramp cell
-        on_ramp = Source(self.delta_time, demand_onramp_points, demand_onramp_values, alinea)
+        on_ramp = Source(self.delta_time, demand_onramp_points, demand_onramp_values, self.aline)
         on_ramp.next_cell = self
         self.on_ramp = on_ramp
 

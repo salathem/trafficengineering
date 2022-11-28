@@ -3,8 +3,8 @@ from cell import Cell as Mastercell
 
 
 class Cell(Mastercell):
-    def __init__(self, length, lanes, delta_time, fd, flow=0, vehicles=0, beta=0, on_ramp_demand=0):
-        super(Cell, self).__init__(length, lanes, delta_time, fd, flow, vehicles, beta, on_ramp_demand)
+    def __init__(self, length, lanes, delta_time, fd, flow=0, vehicles=0, beta=0, on_ramp_demand=0, alinea=None):
+        super(Cell, self).__init__(length, lanes, delta_time, fd, alinea, flow, vehicles, beta, on_ramp_demand)
 
         # calculations
         self.critical_density = self.maximum_flow / self.freeflow_speed
@@ -30,15 +30,18 @@ class Cell(Mastercell):
             if not self.next_cell.has_on_ramp:
                 self.outflow = min((1-self.beta) * self.speed * self.density, self.next_cell.congestion_wave_speed * (self.next_cell.jam_density - self.next_cell.density), self.maximum_flow)
             else:
-                temp_outflow_cell = min((1-self.beta) * self.speed * self.density, self.next_cell.congestion_wave_speed * (self.next_cell.jam_density - self.next_cell.density), self.maximum_flow)
-                temp_outflow_on_ramp = self.next_cell.on_ramp.temp_outflow(time_step)
-
-                if (temp_outflow_on_ramp + temp_outflow_cell) <= self.downstream_supply():
-                    self.outflow = temp_outflow_cell
-                    self.next_cell.on_ramp.update_outflow_reduced(temp_outflow_on_ramp)
+                if self.next_cell.on_ramp.alinea.is_applied:
+                    self.next_cell.on_ramp.outflow_alinea(self.time_step, self.next_cell.critical_density, self.next_cell.density)
                 else:
-                    self.outflow = temp_outflow_cell / (temp_outflow_cell + temp_outflow_on_ramp) * self.downstream_supply()
-                    self.next_cell.on_ramp.update_outflow_reduced(temp_outflow_on_ramp / (temp_outflow_cell + temp_outflow_on_ramp) * self.downstream_supply())
+                    temp_outflow_cell = min((1-self.beta) * self.speed * self.density, self.next_cell.congestion_wave_speed * (self.next_cell.jam_density - self.next_cell.density), self.maximum_flow)
+                    temp_outflow_on_ramp = self.next_cell.on_ramp.temp_outflow(time_step)
+
+                    if (temp_outflow_on_ramp + temp_outflow_cell) <= self.downstream_supply():
+                        self.outflow = temp_outflow_cell
+                        self.next_cell.on_ramp.update_outflow_reduced(temp_outflow_on_ramp)
+                    else:
+                        self.outflow = temp_outflow_cell / (temp_outflow_cell + temp_outflow_on_ramp) * self.downstream_supply()
+                        self.next_cell.on_ramp.update_outflow_reduced(temp_outflow_on_ramp / (temp_outflow_cell + temp_outflow_on_ramp) * self.downstream_supply())
 
             if self.outflow < 0:
                 print("Error Negativ Outflow")

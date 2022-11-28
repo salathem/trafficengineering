@@ -13,7 +13,7 @@ scenario = "c"    # Scenario from Exercise (a/b/c/all)
 precision = 0.0001  # precision of alinea optimizer and data print() [-]
 
 # visualisation
-show_plots = True      # (True/False)
+show_plots = False      # (True/False)
 show_animation = False  # (True/False)
 show_values = True      # (True/False)
 save_plots = False       # (True/False)
@@ -24,7 +24,7 @@ dpi = 600
 # set True to apply alinea Ramp metering
 is_applied = True
 # k = 0 : Ramp metering off
-k = 0.173      # k Value for Metanet if not calculate [-]
+k = 76.6     # k Value for Metanet if not calculate [-]
 optimise_k = True  # set True to calculate optimal K-Value
 
 # -------------------------------------------------------------------------------------------------------------
@@ -45,7 +45,6 @@ if user_input_check(method, nr_of_steps, delta_time, scenario, precision, show_p
     else:
         scenarios = [scenario.lower()]
 
-
     for method in methods:
         print("-------------------------------------------")
         print("Method ", method.upper())
@@ -64,12 +63,11 @@ if user_input_check(method, nr_of_steps, delta_time, scenario, precision, show_p
             # initialize alinea
             alinea = Alinea(k, is_applied, optimise_k)
 
-            if method == "metanet":
-                if optimise_k:
-                    alinea.optimize(net, precision)
+            if optimise_k:
+                alinea.optimize(net, precision)
 
-                # set scenario Parameters from exercise
-                net.set_scenario(fd, scenario, alinea)
+            # set scenario Parameters from exercise
+            net.set_scenario(fd, scenario, alinea)
 
             simulation = Simulation(net, nr_of_steps, delta_time, precision)
 
