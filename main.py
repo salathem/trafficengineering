@@ -4,24 +4,25 @@ from simulation import *
 from network import Network
 from alinea import Alinea
 from functions import *
+# -------------------------------------------------------------------------------------------------------------
 # parameters to change by User
-method = "all"  # method (ctm/metanet/all)
+method = "metanet"  # method (ctm/metanet/all)
 nr_of_steps = 500   # Nummer of Steps of Simulation
 delta_time = 10 / 3600  # Delta T of Simulation [h]
-scenario = "all"    # Scenario from Exercise (a/b/c/all)
-precision = 0.01  # precision of alinea optimizer and data print() [-]
+scenario = "a"    # Scenario from Exercise (a/b/c/all)
+precision = 0.0001  # precision of alinea optimizer and data print() [-]
 
 # visualisation
-show_plots = False      # (True/False)
+show_plots = True      # (True/False)
 show_animation = False  # (True/False)
 show_values = True      # (True/False)
 save_plots = True       # (True/False)
-diagram_type = "all"     # (2D/3D/all)
-dpi = 300
+diagram_type = "3D"     # (2D/3D)
+dpi = 600
 
 # for metanet only
 # set True to apply alinea Ramp metering
-is_applied = True
+is_applied = False
 # k = 0 : Ramp metering off
 k = 0.173      # k Value for Metanet if not calculate [-]
 optimise_k = True  # set True to calculate optimal K-Value
