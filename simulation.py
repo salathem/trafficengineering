@@ -98,11 +98,12 @@ class Simulation:
         print("VKT: "+str(round(self.vkt, len(str(round(1/self.precision)))))+"   VHT: "+str(round(self.vht, len(str(round(1/self.precision))))))
 
     def print_max_cell(self):
-        for diagram_type in self.diagram_types:
-            for cell in self.net.cells:
-                print('Cell ' + str(cell.id) + ': ')
+
+        for cell in self.net.cells:
+            print('Cell ' + str(cell.id) + ': ')
+            for diagram_type in self.diagram_types:
                 max_cell = max(getattr(self, diagram_type[0])[cell.id - 1])
-                print('Max' + diagram_type[0] + ': ' + str(max_cell))
+                print('Max ' + diagram_type[0] + ': ' + str(max_cell))
     def print_max_net(self):
         for diagram_type in self.diagram_types:
             max_net = 0

@@ -9,15 +9,15 @@ from functions import *
 method = "metanet"  # method (ctm/metanet/all)
 nr_of_steps = 500   # Nummer of Steps of Simulation
 delta_time = 10 / 3600  # Delta T of Simulation [h]
-scenario = "all"    # Scenario from Exercise (a/b/c/all)
+scenario = "b"    # Scenario from Exercise (a/b/c/all)
 precision = 0.0001  # precision of alinea optimizer and data print() [-]
 
 # visualisation
 show_plots = False      # (True/False)
 show_animation = False  # (True/False)
 show_values = True      # (True/False)
-show_max_cell = False    # (True/False)
-show_max_net = True    # (True/False)
+show_max_cell = True    # (True/False)
+show_max_net = False    # (True/False)
 save_plots = False      # (True/False)
 diagram_type = "3D"     # (2D/3D)
 dpi = 600
