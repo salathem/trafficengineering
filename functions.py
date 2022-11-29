@@ -1,6 +1,6 @@
-def user_input_check(method, nr_of_steps, delta_time, scenario, precision, show_plots, show_animation, show_values, save_plots, diagram_type, dpi, is_applied, k, optimise_k):
+def user_input_check(method, nr_of_steps, delta_time, scenario, precision, show_plots, show_animation, show_values, save_plots, diagram_type, dpi, is_applied, k, optimise_k, show_max_cell, show_max_net):
     user_input_is_valid = True
-    booleans = [[show_plots, "show_plots"], [show_animation, "show_animation"], [show_values, "show_values"], [save_plots, "save_plots"], [is_applied, "is_applied"], [optimise_k, "optimise_k"]]
+    booleans = [[show_plots, "show_plots"], [show_animation, "show_animation"], [show_values, "show_values"], [save_plots, "save_plots"], [is_applied, "is_applied"], [optimise_k, "optimise_k"], [show_max_cell, "show_max_cell"], [show_max_net, "show_max_net"]]
 
     if method not in ["ctm", "metanet", "all"]:
         print("method is not (ctm/metanet/all)")

@@ -61,7 +61,7 @@ class Simulation:
                 os.mkdir(path)
 
             for cell in self.net.cells:
-                plt.plot(x_values, self.flow[cell.id-1])
+                plt.plot(x_values, getattr(self, diagram_type[0])[cell.id-1])
                 plt.xlabel('Time [s]')
                 plt.ylabel(diagram_type[0] + ' ' + diagram_type[1])
                 plt.title('cell ' + str(cell.id) + ' ' + diagram_type[0] + ' ' + self.method + ' scenario ' + self.scenario)
@@ -93,6 +93,26 @@ class Simulation:
                 plt.savefig('plots/' + diagram_type[0] + ' ' + self.method + ' scenario ' + self.scenario + '.png', dpi=dpi)
             if show_plots:
                 plt.show()
+
+    def print(self):
+        print("VKT: "+str(round(self.vkt, len(str(round(1/self.precision)))))+"   VHT: "+str(round(self.vht, len(str(round(1/self.precision))))))
+
+    def print_max_cell(self):
+        for diagram_type in self.diagram_types:
+            for cell in self.net.cells:
+                print('Cell ' + str(cell.id) + ': ')
+                max_cell = max(getattr(self, diagram_type[0])[cell.id - 1])
+                print('Max' + diagram_type[0] + ': ' + str(max_cell))
+    def print_max_net(self):
+        for diagram_type in self.diagram_types:
+            max_net = 0
+            cell_name = "No Maximum Found"
+            for cell in self.net.cells:
+                temp_max = max(getattr(self, diagram_type[0])[cell.id - 1])
+                if max_net < temp_max:
+                    cell_name = str('Cell ' + str(cell.id))
+                    max_net = round(temp_max, 2)
+            print('Max ' + diagram_type[0] + ': ' + str(max_net) + '  located in ' + cell_name)
 
     def animate(self):
         max_flow = self.flow.max()
@@ -148,6 +168,3 @@ class Simulation:
             plt.clf()
 
         plt.show()
-
-    def print(self):
-        print("VKT: "+str(round(self.vkt, len(str(round(1/self.precision)))))+"   VHT: "+str(round(self.vht, len(str(round(1/self.precision))))))

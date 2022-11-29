@@ -18,7 +18,7 @@ class Alinea:
         self.method = net.method
 
         start = precision
-        end = 100
+        end = 10
         step = 0.1
         precision /= 10
         optimal_k = self.k

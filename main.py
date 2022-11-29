@@ -9,26 +9,28 @@ from functions import *
 method = "metanet"  # method (ctm/metanet/all)
 nr_of_steps = 500   # Nummer of Steps of Simulation
 delta_time = 10 / 3600  # Delta T of Simulation [h]
-scenario = "c"    # Scenario from Exercise (a/b/c/all)
+scenario = "all"    # Scenario from Exercise (a/b/c/all)
 precision = 0.0001  # precision of alinea optimizer and data print() [-]
 
 # visualisation
 show_plots = False      # (True/False)
 show_animation = False  # (True/False)
 show_values = True      # (True/False)
-save_plots = False       # (True/False)
+show_max_cell = False    # (True/False)
+show_max_net = True    # (True/False)
+save_plots = False      # (True/False)
 diagram_type = "3D"     # (2D/3D)
 dpi = 600
 
 # for metanet only
 # set True to apply alinea Ramp metering
-is_applied = True
+is_applied = False
 # k = 0 : Ramp metering off
-k = 76.6     # k Value for Metanet if not calculate [-]
+k = 0.5     # k Value for Metanet if not calculate [-]
 optimise_k = True  # set True to calculate optimal K-Value
 
 # -------------------------------------------------------------------------------------------------------------
-if user_input_check(method, nr_of_steps, delta_time, scenario, precision, show_plots, show_animation, show_values, save_plots, diagram_type, dpi, is_applied, k, optimise_k):
+if user_input_check(method, nr_of_steps, delta_time, scenario, precision, show_plots, show_animation, show_values, save_plots, diagram_type, dpi, is_applied, k, optimise_k, show_max_cell, show_max_net):
 
     if not is_applied:
         k = 0
@@ -89,3 +91,7 @@ if user_input_check(method, nr_of_steps, delta_time, scenario, precision, show_p
                 simulation.animate()
             if show_values:
                 simulation.print()
+            if show_max_cell:
+                simulation.print_max_cell()
+            if show_max_net:
+                simulation.print_max_net()
